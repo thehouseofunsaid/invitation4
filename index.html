@@ -9,6 +9,1208 @@
 <title>Gruhapravesam | Balamoni Family</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600;1,700&display=swap" rel="stylesheet">
+<style>
+  /* =====================================================
+     COLOURS (same for every order)
+     ===================================================== */
+  :root{
+    --maroon:#7a1f2b;
+    --text:#5b2a22;
+    --gold:#a0701f;
+    --gold-light:#e9c877;
+    --cream:#f6ecd2;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html,body{height:100%;background:#1b120c;overflow:hidden;overscroll-behavior:none;touch-action:manipulation;}
+  body{-webkit-text-size-adjust:100%;user-select:none;-webkit-user-select:none;}
+  body{font-family:'Cormorant Garamond',serif;color:var(--text);-webkit-tap-highlight-color:transparent;}
+
+  /* Phone-sized frame (on laptop it stays phone width) */
+  .app{
+    position:relative;
+    width:min(100vw,480px);
+    height:100dvh;
+    margin:0 auto;
+    overflow:hidden;
+    background:#f6ecd2;
+    container-type:size;
+  }
+
+  /* Stage – always shows the full height of every picture */
+  .stage{
+    position:absolute;
+    left:50%;top:50%;
+    width:calc(100cqh * 1040 / 1860);
+    aspect-ratio:1040 / 1860;
+    transform:translate(-50%,-50%);
+    container-type:inline-size;
+    overflow:hidden;
+  }
+
+  /* Screens: soft blur cross-fade (blur fully removed once shown, so photos stay sharp) */
+  .screen{
+    position:absolute;inset:0;
+    opacity:0;visibility:hidden;
+    filter:blur(12px);
+    transition:opacity 1.2s ease, filter 1.2s ease, visibility 1.2s ease;
+  }
+  .screen.active{opacity:1;visibility:visible;filter:none;}
+
+  /* Gold dust on top of everything */
+  #sparkles{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:50;}
+
+  /* =====================================================
+     TEXT STYLES – royal wedding look
+     ===================================================== */
+  .script{font-family:'Great Vibes',cursive;color:var(--maroon);line-height:1.2;}
+  .serif {font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--text);line-height:1.35;}
+  .italic{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;color:var(--gold);}
+  .caps {font-family:'Cinzel Decorative',serif;font-weight:700;letter-spacing:.22em;color:var(--gold);}
+
+  /* every cursive line = same bold look as "Ganesh & Bhargavi" */
+  .script,.s1-names,.s2-cpl,.s6-host,.vibe{-webkit-text-stroke:.022em currentColor;paint-order:stroke fill;}
+  .vibe{font-family:'Great Vibes',cursive !important;font-style:normal !important;font-weight:400 !important;color:var(--maroon) !important;}
+  .caps{font-weight:900;}
+
+  /* Gold foil text that shines */
+  .gold{
+    display:inline-block;
+    background:linear-gradient(100deg,
+      #7c4a0c 0%, #b8841f 20%, #fff0bd 30%, #c9962f 40%, #7c4a0c 55%,
+      #b8841f 70%, #fff0bd 80%, #c9962f 90%, #7c4a0c 100%);
+    background-size:200% 100%;
+    -webkit-background-clip:text;background-clip:text;
+    color:transparent;
+    padding:0 2cqi;
+    animation:shine 3s linear infinite;
+  }
+  @keyframes shine{to{background-position:-200% 0;}}
+
+  /* small gold ornament line */
+  .orn{
+    width:30cqi;height:2cqi;margin:1.2cqi auto;
+    background:
+      radial-gradient(circle,var(--gold) 0 .55cqi,transparent .65cqi) center/2cqi 2cqi no-repeat,
+      linear-gradient(90deg,transparent,var(--gold) 25%,var(--gold) 42%,transparent 45%,transparent 55%,var(--gold) 58%,var(--gold) 75%,transparent) center/100% 1px no-repeat;
+  }
+
+  /* =====================================================
+     REVEAL EFFECTS (one by one – nothing shows before its turn)
+     ===================================================== */
+  .ln{opacity:0;}
+
+  /* written left to right like a pen – letters stay joined, nothing overlaps */
+  .ln.write{opacity:0;width:fit-content;margin-left:auto;margin-right:auto;padding:0 .25em;
+    -webkit-mask-image:linear-gradient(90deg,#000 40%,transparent 60%);mask-image:linear-gradient(90deg,#000 40%,transparent 60%);
+    -webkit-mask-size:250% 100%;mask-size:250% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;
+    -webkit-mask-position:100% 0;mask-position:100% 0;}
+  .ln.write.on{opacity:1;animation:penWrite var(--d,1.5s) linear forwards var(--t,0s);}
+  @keyframes penWrite{from{-webkit-mask-position:100% 0;mask-position:100% 0;}to{-webkit-mask-position:0 0;mask-position:0 0;}}
+
+  .ln.letters{opacity:0;}
+  .ln.letters.on{opacity:1;}
+  .ln.letters .ch{opacity:0;display:inline-block;white-space:pre;}
+  .ln.on.letters .ch{animation:chIn .55s ease forwards;}
+  @keyframes chIn{
+    0% {opacity:0;filter:blur(4px);transform:translateY(.6cqi);}
+    100%{opacity:1;filter:blur(0);transform:translateY(0);}
+  }
+
+  .ln.on.fade{animation:fadeUp .9s ease forwards;}
+  @keyframes fadeUp{
+    0% {opacity:0;filter:blur(6px);transform:translateY(2cqi);}
+    100%{opacity:1;filter:blur(0);transform:translateY(0);}
+  }
+
+  .ln.on.pop{animation:pop 1.2s cubic-bezier(.2,.9,.3,1.2) forwards;}
+  @keyframes pop{
+    0% {opacity:0;transform:scale(.7);filter:blur(8px);}
+    100%{opacity:1;transform:scale(1);filter:blur(0);}
+  }
+
+  /* cards fly in, crossing from left and right */
+  .ln.on.fromL{animation:flyL 1s cubic-bezier(.2,.8,.25,1.1) forwards;}
+  .ln.on.fromR{animation:flyR 1s cubic-bezier(.2,.8,.25,1.1) forwards;}
+  @keyframes flyL{
+    0% {opacity:0;transform:translate(-60cqi,8cqi) rotate(-14deg) scale(.7);}
+    100%{opacity:1;transform:translate(0,0) rotate(0) scale(1);}
+  }
+  @keyframes flyR{
+    0% {opacity:0;transform:translate(60cqi,8cqi) rotate(14deg) scale(.7);}
+    100%{opacity:1;transform:translate(0,0) rotate(0) scale(1);}
+  }
+
+  /* shared moving keyframes */
+  @keyframes sweep{0%{left:-60%;}60%,100%{left:140%;}}
+  @keyframes haloPulse{0%,100%{opacity:.5;transform:scale(.96);}50%{opacity:1;transform:scale(1.04);}}
+  @keyframes leafSway {0%,100%{transform:rotate(-2.5deg);}50%{transform:rotate(2.5deg);}}
+  @keyframes leafSwayR{0%,100%{transform:rotate(2.5deg);}50%{transform:rotate(-2.5deg);}}
+  @keyframes plantSway{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+  @keyframes lotusSway{0%,100%{transform:rotate(-3.5deg);}50%{transform:rotate(3.5deg);}}
+  @keyframes stringSwing{0%,100%{transform:rotate(-3deg);}50%{transform:rotate(3deg);}}
+  @keyframes bananaSwayL{0%,100%{transform:rotate(-2deg);}50%{transform:rotate(2.5deg);}}
+  @keyframes flicker{from{transform:scale(1,1);}to{transform:scale(.88,1.12);}}
+  @keyframes spinSlow{to{transform:rotate(360deg);}}
+
+  /* slow zoom in & out on every picture */
+  .screen.active .s1art,.screen.active .s2art,.screen.active .s3art,.screen.active .s4art{animation:kenburns 12s ease-in-out infinite alternate;}
+  @keyframes kenburns{0%{transform:translateX(-50%) scale(1);}100%{transform:translateX(-50%) scale(1.08);}}
+
+  /* =====================================================
+     MUSIC BUTTON (top right)
+     ===================================================== */
+  .music-btn{
+    position:absolute;z-index:70;
+    top:calc(env(safe-area-inset-top, 0px) + 22px);right:12px;
+    width:34px;height:34px;border-radius:50%;
+    border:1.2px solid var(--gold);
+    background:rgba(255,250,240,.75);
+    color:var(--maroon);font-size:15px;line-height:31px;text-align:center;
+    cursor:pointer;
+  }
+  .music-btn.playing{animation:spinSlow 6s linear infinite;}
+  .music-btn.off::after{
+    content:"";position:absolute;left:7px;right:7px;top:50%;
+    height:1.2px;background:var(--maroon);transform:rotate(-45deg);
+  }
+
+  /* =====================================================
+     SCREEN 1 – GANESHA (moving flowers + banana leaves)
+     ===================================================== */
+  .s1-text{position:absolute;left:8%;right:8%;top:26.5%;text-align:center;}
+  .s1-text::before{content:"";position:absolute;left:-8%;right:-8%;top:-12%;bottom:-14%;z-index:-1;
+    background:radial-gradient(closest-side, rgba(255,250,238,.96) 0%, rgba(255,250,238,.88) 60%, rgba(255,250,238,0) 100%);}
+  .s1-text .script,.s1-text .italic,.s1-text .caps{text-shadow:0 0 2cqi #fffaf0, 0 0 1cqi #fffaf0;}
+
+  .s1art{position:absolute;top:0;bottom:0;left:50%;height:100%;aspect-ratio:899 / 1599;transform:translateX(-50%);}
+  .s1art img{position:absolute;display:block;}
+  .s1art .full{inset:0;width:100%;height:100%;}
+  .s1art .bud_551{left:58.843%;top:0.000%;width:5.117%;transform-origin:50% 0%;animation:stringSwing 3.5s ease-in-out infinite -1.5s;}
+  .s1art .bud_177{left:17.464%;top:0.000%;width:4.561%;transform-origin:50% 0%;animation:stringSwing 3.7s ease-in-out infinite -1.9s;}
+  .s1art .bud_805{left:86.986%;top:0.000%;width:5.117%;transform-origin:50% 0%;animation:stringSwing 3.6s ease-in-out infinite -1.8s;}
+  .s1art .bud_612{left:65.517%;top:0.000%;width:5.006%;transform-origin:50% 0%;animation:stringSwing 2.6s ease-in-out infinite -0.9s;}
+  .s1art .bud_725{left:78.087%;top:0.000%;width:5.228%;transform-origin:50% 0%;animation:stringSwing 3.9s ease-in-out infinite -1.3s;}
+  .s1art .bud_231{left:23.359%;top:0.000%;width:4.672%;transform-origin:50% 0%;animation:stringSwing 3.9s ease-in-out infinite -0.2s;}
+  .s1art .bud_334{left:34.705%;top:0.000%;width:4.672%;transform-origin:50% 0%;animation:stringSwing 3.3s ease-in-out infinite -0.5s;}
+  .s1art .bud_864{left:93.548%;top:0.000%;width:5.117%;transform-origin:50% 0%;animation:stringSwing 3.4s ease-in-out infinite -1.1s;}
+  .s1art .bud_668{left:71.746%;top:0.000%;width:5.117%;transform-origin:50% 0%;animation:stringSwing 2.6s ease-in-out infinite -0.4s;}
+  .s1art .bud_282{left:28.921%;top:0.000%;width:4.783%;transform-origin:50% 0%;animation:stringSwing 3.0s ease-in-out infinite -1.8s;}
+  .s1art .jasL{left:1.335%;top:0.000%;width:5.339%;transform-origin:50% 0%;animation:jasSwing 4.0s ease-in-out infinite -0.3s;}
+  .s1art .jasR{left:9.344%;top:0.000%;width:5.562%;transform-origin:50% 0%;animation:jasSwing 3.6s ease-in-out infinite -1.2s;}
+  .s1art .bananaL{left:0.000%;top:13.071%;width:18.687%;transform-origin:0% 95%;animation:bananaSwayL 4s ease-in-out infinite;}
+  .s1art .bananaR{left:74.750%;top:62.789%;width:12.903%;transform-origin:100% 100%;animation:bananaSwayR 3.6s ease-in-out infinite -1s;}
+  @keyframes jasSwing{0%,100%{transform:rotate(-2.5deg);}50%{transform:rotate(2.5deg);}}
+  @keyframes bananaSwayR{0%,100%{transform:rotate(2deg);}50%{transform:rotate(-3deg);}}
+
+  /* soft divine glow on Ganesha */
+  .s1art .glow{
+    position:absolute;left:50%;top:9.5%;width:32%;aspect-ratio:1;
+    transform:translate(-50%,-50%);border-radius:50%;
+    background:radial-gradient(circle, rgba(255,236,170,.75) 0%, rgba(255,214,120,.35) 35%, rgba(255,214,120,0) 70%);
+    mix-blend-mode:screen;animation:glowPulse 2.8s ease-in-out infinite;pointer-events:none;
+  }
+  @keyframes glowPulse{0%,100%{opacity:.35;transform:translate(-50%,-50%) scale(.9);}50%{opacity:.9;transform:translate(-50%,-50%) scale(1.08);}}
+
+  .petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
+  .petal{position:absolute;top:-4%;width:2.4cqi;height:1.8cqi;border-radius:70% 0 70% 0;opacity:0;animation:fall linear infinite;}
+  @keyframes fall{
+    0% {transform:translate(0,0) rotate(0deg);opacity:0;}
+    8% {opacity:.95;}
+    100%{transform:translate(10cqi,185cqi) rotate(560deg);opacity:0;}
+  }
+  .s1-mantra{font-size:3.6cqi;letter-spacing:.08em;white-space:nowrap;color:#7a4a0a;}
+  .s1-welcome{font-size:8.6cqi;margin-top:4.5cqi;white-space:nowrap;}
+  .s1-names{font-family:'Great Vibes',cursive;font-size:10.5cqi;line-height:1.2;white-space:nowrap;margin-top:3cqi;
+    color:#7a1f2b;text-shadow:0 0 .2cqi #e9c877, 0 .3cqi .6cqi rgba(160,112,31,.45), 0 0 3cqi #fffaf0;}
+  .s1-text .orn{margin:3.4cqi auto 2.6cqi;width:40cqi;}
+  .s1-invite{text-align:center;line-height:1;}
+  /* invite line: one line, bold, on a maroon & gold ribbon with a shine */
+  .s1-invite span{position:relative;overflow:hidden;display:inline-block;white-space:nowrap;
+    font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:4cqi;letter-spacing:.02em;line-height:1.2;
+    color:#fff3c4;text-shadow:0 0 1cqi rgba(255,215,120,.6);
+    padding:1.1cqi 3.6cqi 1.3cqi;border-radius:50px;
+    background:linear-gradient(135deg,#962f3b,#7a1f2b 50%,#5a1420);border:1px solid #e9c877;
+    box-shadow:0 0 0 .5cqi rgba(255,248,225,.85),0 1cqi 2.5cqi rgba(122,31,43,.35);}
+  .s1-invite span::after{content:"";position:absolute;top:0;left:-60%;width:30%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,240,200,.55),transparent);transform:skewX(-20deg);animation:sweep 3.5s ease-in-out infinite 1s;}
+  .s1-invite i{font-family:'Great Vibes',cursive;font-style:normal;font-weight:400;font-size:1.3em;color:#f3d58a;padding:0 .08em;}
+  .s1-event{font-size:4.2cqi;letter-spacing:.04em;color:var(--maroon);margin-top:3.4cqi;white-space:nowrap;}
+
+  /* =====================================================
+     SCREEN 2 – BLESSINGS (moving cows + elders' names)
+     ===================================================== */
+  .s2art{position:absolute;top:0;bottom:0;left:50%;height:100%;aspect-ratio:893 / 1586;transform:translateX(-50%);}
+  .s2art img{position:absolute;display:block;}
+  .s2art .full{inset:0;width:100%;height:100%;}
+  .s2art .leavesTL{left:0.000%;top:0.000%;width:24.860%;transform-origin:0% 0%;animation:leafSway 4s ease-in-out infinite;}
+  .s2art .branchL{left:0.000%;top:14.565%;width:16.797%;transform-origin:0% 0%;animation:leafSway 3.4s ease-in-out infinite -1s;}
+  .s2art .leavesTR{left:86.114%;top:0.000%;width:13.886%;transform-origin:100% 0%;animation:leafSwayR 4.2s ease-in-out infinite -.5s;}
+  .s2art .branchR{left:77.044%;top:26.293%;width:22.956%;transform-origin:100% 0%;animation:leafSwayR 3.6s ease-in-out infinite -1.4s;}
+  .s2art .plantR{left:72.228%;top:66.393%;width:24.636%;transform-origin:50% 100%;animation:plantSway 3.2s ease-in-out infinite;}
+  .s2art .cowsL{left:13.774%;top:73.834%;width:33.483%;transform-origin:50% 100%;animation:cowBob 2.2s ease-in-out infinite;}
+  .s2art .cowsR{left:54.983%;top:72.194%;width:39.866%;transform-origin:50% 100%;animation:cowBob 2.6s ease-in-out infinite -.8s;}
+  .s2art .front{left:11.534%;top:81.148%;width:85.554%;}
+  @keyframes cowBob{0%,100%{transform:rotate(-1deg) translateY(0);}50%{transform:rotate(1deg) translateY(-1.2%);}}
+
+  .s2-head{position:absolute;left:0;right:0;top:5.4%;text-align:center;}
+  .s2-script{font-size:9.4cqi;white-space:nowrap;}
+  .s2-small{font-size:3.4cqi;letter-spacing:.12em;margin-top:1.6cqi;color:var(--maroon);}
+
+  /* elders' names – the hero of this screen */
+  .s2-frame{position:absolute;left:11%;right:11%;top:18.5%;height:30%;
+    background:linear-gradient(180deg,rgba(255,252,244,.94),rgba(255,247,230,.9));
+    border:1px solid #c9a24e;border-radius:2cqi;
+    box-shadow:inset 0 0 0 1.2cqi rgba(255,252,244,.9), inset 0 0 0 1.45cqi rgba(201,162,78,.7), 0 2cqi 5cqi rgba(110,60,20,.18);}
+  .s2-frame .cn{position:absolute;width:9cqi;height:9cqi;border:2px solid #b8862b;}
+  .s2-frame .cn.tl{top:2.4cqi;left:2.4cqi;border-right:0;border-bottom:0;border-radius:2cqi 0 0 0;}
+  .s2-frame .cn.tr{top:2.4cqi;right:2.4cqi;border-left:0;border-bottom:0;border-radius:0 2cqi 0 0;}
+  .s2-frame .cn.bl{bottom:2.4cqi;left:2.4cqi;border-right:0;border-top:0;border-radius:0 0 0 2cqi;}
+  .s2-frame .cn.br{bottom:2.4cqi;right:2.4cqi;border-left:0;border-top:0;border-radius:0 0 2cqi 0;}
+  .s2-om{position:absolute;left:0;right:0;top:-5.5cqi;margin:auto;width:11cqi;height:11cqi;border-radius:50%;
+    background:linear-gradient(140deg,#962f3b,#7a1f2b 55%,#5a1420);border:1.5px solid #e9c877;
+    box-shadow:0 0 0 .8cqi rgba(255,250,238,.95),0 0 4cqi rgba(233,180,70,.8);
+    font-size:6cqi;line-height:10.4cqi;text-align:center;color:#f3d58a;animation:omGlow 2.6s ease-in-out infinite;}
+  @keyframes omGlow{0%,100%{box-shadow:0 0 0 .8cqi rgba(255,250,238,.95),0 0 2cqi rgba(233,180,70,.5);}50%{box-shadow:0 0 0 .8cqi rgba(255,250,238,.95),0 0 6cqi rgba(233,180,70,1);}}
+  .s2-names{position:absolute;left:11%;right:11%;top:23.2%;text-align:center;}
+  .s2-sur{font-size:3.8cqi;letter-spacing:.3em;padding-left:.3em;color:#8a5a12;}
+  .s2-cpl{font-family:'Great Vibes',cursive;font-size:8.6cqi;line-height:1.2;color:var(--maroon);white-space:nowrap;margin-top:.6cqi;
+    text-shadow:0 .2cqi 0 rgba(233,200,119,.7);}
+  .s2-div{display:flex;align-items:center;justify-content:center;gap:2.4cqi;margin:2cqi 0 1.8cqi;font-size:4cqi;color:#b8862b;}
+  .s2-div span{width:16cqi;height:1px;background:linear-gradient(90deg,transparent,#b8862b);}
+  .s2-div span:last-child{background:linear-gradient(90deg,#b8862b,transparent);}
+  /* blessing petals falling on screen 2 */
+  .s2-petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
+  .s2-bless{position:absolute;left:10%;right:10%;top:50.5%;text-align:center;}
+  .s2-bless p{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:7.4cqi;line-height:1.2;color:#5e2c12;text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
+
+  /* =====================================================
+     SCREEN 3 – PLEASE JOIN US (moving elephant picture)
+     ===================================================== */
+  .s3art{position:absolute;top:0;bottom:0;left:50%;height:100%;aspect-ratio:941 / 1672;transform:translateX(-50%);}
+  .s3art img{position:absolute;display:block;}
+  .s3art .full{inset:0;width:100%;height:100%;}
+  .s3art .str_178{left:16.366%;top:23.026%;width:5.101%;transform-origin:50% 0%;animation:stringSwing 2.9s ease-in-out infinite -1.1s;}
+  .s3art .str_232{left:22.742%;top:23.804%;width:3.826%;transform-origin:50% 0%;animation:stringSwing 3.1s ease-in-out infinite -1.2s;}
+  .s3art .str_322{left:31.668%;top:14.354%;width:5.101%;transform-origin:50% 0%;animation:stringSwing 3.5s ease-in-out infinite -0.1s;}
+  .s3art .str_378{left:37.620%;top:11.663%;width:5.101%;transform-origin:50% 0%;animation:stringSwing 2.6s ease-in-out infinite -1.7s;}
+  .s3art .str_482{left:49.309%;top:11.364%;width:4.463%;transform-origin:50% 0%;animation:stringSwing 3.0s ease-in-out infinite -0.5s;}
+  .s3art .str_533{left:54.623%;top:11.842%;width:4.038%;transform-origin:50% 0%;animation:stringSwing 4.0s ease-in-out infinite -0.9s;}
+  .s3art .str_633{left:65.462%;top:13.756%;width:4.357%;transform-origin:50% 0%;animation:stringSwing 3.8s ease-in-out infinite -1.0s;}
+  .s3art .str_686{left:70.882%;top:16.447%;width:4.570%;transform-origin:50% 0%;animation:stringSwing 3.5s ease-in-out infinite -0.3s;}
+  .s3art .str_786{left:81.615%;top:21.651%;width:4.463%;transform-origin:50% 0%;animation:stringSwing 3.5s ease-in-out infinite -1.7s;}
+  .s3art .bananaL{left:0.000%;top:10.108%;width:36.344%;transform-origin:5% 100%;animation:bananaSwayL 4s ease-in-out infinite;}
+  .s3art .bananaR{left:72.476%;top:0.000%;width:27.524%;transform-origin:100% 25%;animation:leafSwayR 4.4s ease-in-out infinite -1s;}
+  .s3art .rosesL{left:0.000%;top:66.926%;width:14.346%;transform-origin:20% 100%;animation:plantSway 3.6s ease-in-out infinite;}
+  .s3art .rosesR{left:80.234%;top:62.799%;width:19.766%;transform-origin:80% 100%;animation:plantSway 3.2s ease-in-out infinite -1.2s;}
+  .s3art .elephant{left:9.139%;top:73.385%;width:47.715%;transform-origin:50% 100%;animation:eleWalk 2.4s ease-in-out infinite;}
+  .s3art .lotusL{left:0.000%;top:79.844%;width:32.412%;transform-origin:30% 100%;animation:lotusSway 3.4s ease-in-out infinite -.4s;}
+  .s3art .lotusR{left:59.405%;top:79.844%;width:40.595%;transform-origin:70% 100%;animation:lotusSway 3.8s ease-in-out infinite -1.6s;}
+  @keyframes eleWalk{0%,100%{transform:translateY(0) rotate(0deg);}25%{transform:translateY(-1.2%) rotate(-1deg);}50%{transform:translateY(0) rotate(0deg);}75%{transform:translateY(-1.2%) rotate(1deg);}}
+
+  /* text starts below the hanging flowers */
+  .s3-text{position:absolute;left:10%;right:10%;top:33.6%;text-align:center;}
+  .s3-text::before{
+    content:"";position:absolute;left:-14%;right:-14%;top:-8%;bottom:-8%;z-index:-1;
+    background:radial-gradient(closest-side, rgba(255,250,238,.95) 0%, rgba(255,250,238,.85) 55%, rgba(255,250,238,0) 100%);
+  }
+  .s3-text .script,.s3-text .serif,.s3-text .italic,.s3-text .caps{text-shadow:0 0 2cqi #fffaf0, 0 0 1cqi #fffaf0;}
+  .s3-please{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:5cqi;letter-spacing:.03em;line-height:1.2;white-space:nowrap;
+    color:var(--maroon);text-shadow:0 .3cqi 0 rgba(233,200,119,.9), 0 0 2cqi #fffaf0 !important;}
+  .s3-please::before,.s3-please::after{content:"";display:inline-block;width:4cqi;height:1px;vertical-align:middle;margin:0 1.6cqi;
+    background:linear-gradient(90deg,transparent,var(--gold));}
+  .s3-please::after{background:linear-gradient(90deg,var(--gold),transparent);}
+  .s3-for{font-size:6.2cqi;line-height:1.05;margin-top:1.8cqi;}
+  .s3-title{font-family:'Great Vibes',cursive;font-size:10.8cqi;line-height:1.1;margin-top:1.2cqi;
+    background:linear-gradient(100deg,#7a1f2b 0%,#a8323f 22%,#d9a441 38%,#fff0bd 48%,#d9a441 58%,#a8323f 76%,#7a1f2b 100%) !important;
+    background-size:220% 100% !important;-webkit-background-clip:text !important;background-clip:text !important;
+    filter:drop-shadow(0 0 1.2cqi rgba(255,236,180,.95)) drop-shadow(0 .3cqi .4cqi rgba(122,31,43,.35));}
+  .s3-text .orn{margin:2cqi auto 2.2cqi;}
+  .s3-date{font-size:5cqi;font-weight:700;color:#4a1c14;margin-top:0;white-space:nowrap;}
+  .s3-date .bar{color:var(--gold);margin:0 1cqi;}
+  .s3-date sup{font-size:.6em;}
+  .s3-mlabel{font-size:3.4cqi;letter-spacing:.2em;margin-top:1.8cqi;color:var(--maroon);}
+
+  /* muhurtham watch */
+  .clockbox{position:relative;width:9cqi;height:9cqi;margin:2.2cqi auto 0;}
+  .rays{
+    position:absolute;inset:-3.6cqi;border-radius:50%;
+    background:repeating-conic-gradient(rgba(240,190,80,.55) 0 3deg, transparent 3deg 12deg);
+    -webkit-mask:radial-gradient(circle, transparent 42%, #000 48%, transparent 72%);
+            mask:radial-gradient(circle, transparent 42%, #000 48%, transparent 72%);
+    animation:spinSlow 30s linear infinite;
+  }
+  .clock{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 1.4cqi 3cqi rgba(110,60,20,.28));}
+  .clock .hand{transform-origin:50px 50px;}
+  .clock .hr,.clock .min{transform:rotate(var(--a));}
+  #screen3.go .clock .hr {animation:spinHr 2.2s cubic-bezier(.2,.8,.3,1) forwards var(--hd,0s);}
+  #screen3.go .clock .min{animation:spinMin 2.2s cubic-bezier(.2,.8,.3,1) forwards var(--hd,0s);}
+  .clock .sec{animation:spinSlow 60s linear infinite;}
+  @keyframes spinHr {from{transform:rotate(calc(var(--a) - 90deg));} to{transform:rotate(var(--a));}}
+  @keyframes spinMin{from{transform:rotate(calc(var(--a) - 1080deg));}to{transform:rotate(var(--a));}}
+
+  /* highlighted muhurtham time */
+  .s3-time{
+    display:inline-block;margin-top:1.8cqi;padding:.5cqi 4.5cqi .7cqi;
+    font-family:'Cinzel',serif;font-weight:700;font-size:5.2cqi;letter-spacing:.08em;line-height:1.1;
+    color:#fff3c4;text-shadow:0 0 1.5cqi rgba(255,215,120,.9);
+    background:linear-gradient(135deg,#962f3b,var(--maroon) 50%,#5a1420);
+    border:1px solid var(--gold-light);border-radius:50px;
+    box-shadow:0 0 0 .5cqi rgba(255,248,225,.8), 0 0 3cqi rgba(233,180,70,.75);
+  }
+  @keyframes timeGlow{0%,100%{box-shadow:0 0 0 .5cqi rgba(255,248,225,.8),0 0 2cqi rgba(233,180,70,.5);}50%{box-shadow:0 0 0 .5cqi rgba(255,248,225,.9),0 0 5cqi rgba(233,180,70,1);}}
+  /* the maroon box appears only when it is the time's turn */
+  .ln.on.pill{animation:pillIn .6s cubic-bezier(.2,.9,.3,1.2) forwards, timeGlow 2.2s ease-in-out infinite;}
+  @keyframes pillIn{from{opacity:0;transform:scale(.6);}to{opacity:1;transform:scale(1);}}
+
+  /* =====================================================
+     SCREEN 4 – RITUALS (moving banana leaves + lotus)
+     ===================================================== */
+  .s4art{position:absolute;top:0;bottom:0;left:50%;height:100%;aspect-ratio:736 / 1308;transform:translateX(-50%);}
+  .s4art img{position:absolute;display:block;}
+  .s4art .full{inset:0;width:100%;height:100%;}
+  .s4art .banana1{left:68.207%;top:3.670%;width:31.793%;transform-origin:100% 85%;animation:bananaSway 4s ease-in-out infinite;}
+  .s4art .banana2{left:69.293%;top:40.061%;width:30.707%;transform-origin:100% 85%;animation:bananaSway 3.4s ease-in-out infinite -1.2s;}
+  .s4art .lotus{left:0.000%;top:75.459%;width:30.435%;transform-origin:30% 100%;animation:lotusSway 3.2s ease-in-out infinite;}
+  @keyframes bananaSway{0%,100%{transform:rotate(-3deg) skewY(0deg);}50%{transform:rotate(3deg) skewY(-1.5deg);}}
+
+  .s4-head{position:absolute;left:10%;right:10%;top:8%;text-align:center;white-space:nowrap;}
+  .s4-title{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:7.8cqi;color:var(--maroon);line-height:1.2;letter-spacing:.04em;}
+
+  .tl{position:absolute;left:10%;right:10%;top:17%;bottom:13%;}
+  .tl-line{
+    position:absolute;left:50%;top:3%;bottom:3%;width:2px;margin-left:-1px;
+    background:linear-gradient(#e9c877,#c99a3a 50%,#e9c877);
+    transform-origin:top;transform:scaleY(0);
+  }
+  #screen4.go .tl-line{animation:grow 6s ease-out forwards 1s;}
+  @keyframes grow{to{transform:scaleY(1);}}
+  .tl-rows{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;}
+  .row{display:grid;grid-template-columns:1fr 8cqi 1fr;align-items:center;}
+  .row .diya{grid-column:2;justify-self:center;width:7cqi;}
+  .row.left .tcard{grid-column:1;grid-row:1;text-align:right;}
+  .row.right .tcard{grid-column:3;grid-row:1;text-align:left;}
+
+  .diya .flame{transform-origin:20px 15px;animation:flicker .9s ease-in-out infinite alternate;}
+  .diya svg{display:block;width:100%;filter:drop-shadow(0 0 2.5cqi rgba(255,190,60,.9));}
+
+  .tcard{
+    position:relative;
+    background:rgba(255,252,246,.95);
+    border:1px solid rgba(160,112,31,.45);
+    border-radius:1.8cqi;
+    padding:1.3cqi 1.8cqi;
+    box-shadow:0 1.2cqi 3cqi rgba(110,40,30,.14);
+  }
+  .tcard .tm{font-family:'Cinzel',serif;font-weight:700;font-size:3.3cqi;letter-spacing:0;white-space:nowrap;color:#8a5a12;}
+  .tcard .tm .ic{font-size:3.4cqi;vertical-align:-.3cqi;margin:0 .5cqi;}
+  .tcard .nm{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4.9cqi;line-height:1.05;color:var(--maroon);margin-top:.3cqi;}
+  .tcard .sb{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:3.6cqi;line-height:1.15;color:var(--text);margin-top:.2cqi;}
+  .tcard.main{background:linear-gradient(140deg,#962f3b,var(--maroon) 55%,#5a1420);border-color:var(--gold-light);}
+  .tcard.main .tm{color:#f3d58a;}
+  .tcard.main .nm{color:#fff6dc;}
+  .tcard.main .sb{color:#f4dcc4;}
+  .tcard .mu{font-family:'Cinzel',serif;font-weight:700;font-size:2.4cqi;letter-spacing:.12em;color:var(--maroon);margin-top:.2cqi;}
+
+  /* =====================================================
+     SCREEN 5 & 6 – moving peacock background
+     ===================================================== */
+  .s5art{position:absolute;inset:0;overflow:hidden;}
+  #screen6 .s5art img{animation-direction:alternate-reverse;}
+  .s5art img{position:absolute;left:-6%;top:-4%;width:112%;height:108%;object-fit:cover;animation:feather 14s ease-in-out infinite alternate;}
+  @keyframes feather{0%{transform:scale(1) rotate(0deg) translate(0,0);}50%{transform:scale(1.08) rotate(1.2deg) translate(-1.5%,1%);}100%{transform:scale(1.02) rotate(-1deg) translate(1.5%,-1%);}}
+  .s5glow{position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 52%, rgba(255,250,240,.75), rgba(255,250,240,0) 75%);animation:haloPulse 4s ease-in-out infinite;}
+  #screen5 .s6-love,#screen5 .s6-fam,#screen5 .script,#screen6 .s6-calls{text-shadow:0 0 1.5cqi #fffaf0,0 0 .8cqi #fffaf0;}
+
+  .s6-head{position:absolute;left:0;right:0;top:3.6%;text-align:center;}
+  .s6-title{font-size:10cqi;}
+
+  /* ---------- SCREEN 5: big full family photo + names at the bottom ---------- */
+  .famwrap{position:absolute;left:4%;right:4%;top:10.2%;text-align:center;}
+  .s6-photo{
+    position:relative;overflow:hidden;display:inline-block;vertical-align:top;
+    padding:1.2cqi;border-radius:1.8cqi;
+    background:linear-gradient(145deg,#f7e3a2,#b07b22 30%,#fff1c0 50%,#a06a18 70%,#f0d58a);
+    box-shadow:0 0 0 .6cqi rgba(255,248,225,.85), 0 2.5cqi 6cqi rgba(110,40,30,.25);
+  }
+  /* whole photo always shows – tall or wide – never cut, never stretched */
+  .s6-photo img{display:block;width:auto;height:auto;max-width:80cqi;max-height:104cqi;border-radius:1cqi;border:.5cqi solid #fff7e0;}
+  /* screen 5: no frame – just the full photo, big, soft rounded corners */
+  .famwrap .s6-photo{padding:0;background:none;border-radius:2.2cqi;box-shadow:0 2.5cqi 6cqi rgba(110,40,30,.35);}
+  .famwrap .s6-photo img{max-width:82cqi;max-height:120cqi;border:0;border-radius:2.2cqi;}
+  /* photo appears with a fade only – no blur/scale left on it, so it stays sharp */
+  .s6-photo.ln.on.pop{animation:photoIn 1s ease forwards;}
+  @keyframes photoIn{from{opacity:0;}to{opacity:1;}}
+  .s6-photo::after{content:"";position:absolute;top:0;left:-70%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,245,215,.6),transparent);transform:skewX(-18deg);animation:sweep 4.5s ease-in-out infinite 3s;}
+
+  .s6-names{position:absolute;left:8%;right:8%;top:78.5%;text-align:center;}
+  .s6-love{font-size:7.4cqi;line-height:1.05;-webkit-text-stroke:.035em currentColor !important;}
+  .s6-host{font-family:'Great Vibes',cursive;font-size:10cqi;line-height:1.05;color:var(--maroon);margin-top:.2cqi;text-wrap:balance;-webkit-text-stroke:.04em currentColor !important;
+    text-shadow:0 0 .2cqi #e9c877, 0 .3cqi .6cqi rgba(160,112,31,.4), 0 0 2cqi #fffaf0;}
+
+  /* ---------- SCREEN 6: our new home + directions + blessing card ---------- */
+  #screen6 .caps,#screen6 .addr,#screen6 .script,#screen6 .s6-calls{text-shadow:0 0 1.5cqi #fffaf0,0 0 .8cqi #fffaf0;}
+  .s7-head{position:absolute;left:0;right:0;top:3.4%;text-align:center;}
+  .s7-title{font-size:10cqi;}
+
+  /* ---------- SCREEN 6 surprise: scratch the gold, the doors of the new home open ---------- */
+  .surprise{position:absolute;left:25%;right:25%;top:9.2%;text-align:center;}
+  .sp-rays{position:absolute;left:50%;top:46%;width:72cqi;aspect-ratio:1;margin:-36cqi 0 0 -36cqi;border-radius:50%;
+    background:repeating-conic-gradient(rgba(240,190,80,.45) 0 4deg, transparent 4deg 14deg);
+    -webkit-mask:radial-gradient(circle, #000 20%, transparent 70%);mask:radial-gradient(circle, #000 20%, transparent 70%);
+    animation:spinSlow 40s linear infinite;opacity:0;transition:opacity 1.5s ease 2.6s;}
+  .surprise.revealed .sp-rays{opacity:1;transition-delay:.6s;}
+  .sp-home{position:relative;display:block;width:100%;height:auto;filter:drop-shadow(0 1.6cqi 2.4cqi rgba(110,40,30,.3));}
+  .sp-door{transform-box:fill-box;transition:transform 1.8s cubic-bezier(.5,0,.2,1) .3s;}
+  .sp-dl{transform-origin:left center;}
+  .sp-dr{transform-origin:right center;}
+  .surprise.revealed .sp-dl,.surprise.revealed .sp-dr{transform:scaleX(.12);}
+  .sp-diya path:first-child,.sp-lamp path:first-child{transform-box:fill-box;transform-origin:50% 100%;animation:flicker .8s ease-in-out infinite alternate;}
+  .sp-win{animation:winGlow 2.4s ease-in-out infinite;}
+  @keyframes winGlow{0%,100%{opacity:.75;}50%{opacity:1;}}
+  .sp-kalash{transform-box:fill-box;transform-origin:50% 100%;animation:plantSway 3s ease-in-out infinite;}
+  .sp-feet g{opacity:0;transition:opacity .6s ease;}
+  .surprise.revealed .sp-f1{opacity:1;transition-delay:2.1s;}
+  .surprise.revealed .sp-f2{opacity:1;transition-delay:2.7s;}
+  .sp-word{font-family:'Great Vibes',cursive;font-size:7cqi;line-height:1;white-space:nowrap;color:var(--maroon);-webkit-text-stroke:.025em currentColor;
+    margin-top:0;opacity:0;transform:translateY(2cqi);transition:opacity 1s ease 1.8s, transform 1s ease 1.8s;text-shadow:0 0 2cqi #fffaf0;}
+  .surprise.revealed .sp-word{opacity:1;transform:none;}
+  /* gold scratch card on top of the house */
+  .scratch{position:absolute;left:-4%;top:-2%;width:108%;height:104%;z-index:3;border-radius:2.4cqi;touch-action:none;cursor:pointer;
+    box-shadow:0 0 0 .5cqi rgba(255,248,225,.9),0 1.6cqi 4cqi rgba(110,40,30,.35);transition:opacity .8s ease;animation:scratchPulse 2s ease-in-out infinite;}
+  @keyframes scratchPulse{0%,100%{box-shadow:0 0 0 .5cqi rgba(255,248,225,.9),0 1.6cqi 4cqi rgba(110,40,30,.35);}50%{box-shadow:0 0 0 .5cqi rgba(255,248,225,.9),0 0 5cqi rgba(233,180,70,.95);}}
+  .surprise.revealed .scratch{opacity:0;pointer-events:none;animation:none;}
+
+  .s6-venue{position:absolute;left:9%;right:9%;top:34.6%;text-align:center;}
+  .s6-venue .caps{font-size:3.4cqi;letter-spacing:.12em;color:var(--maroon);}
+  .s6-venue .addr{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4.6cqi;line-height:1.35;color:#4a1c14;margin-top:1cqi;}
+  .s6-venue .addr b{font-family:'Cinzel',serif;font-weight:700;font-size:4.5cqi;letter-spacing:.03em;color:var(--maroon);}
+  .s6-btns{position:absolute;left:11%;right:11%;top:53.4%;display:flex;flex-direction:column;gap:1.8cqi;}
+  .btn-row{display:flex;gap:2cqi;}
+  .btn-row .btn{flex:1;font-size:3cqi;letter-spacing:.03em;white-space:nowrap;padding:2.4cqi .6cqi;line-height:1.3;}
+  .btn{
+    display:block;text-decoration:none;text-align:center;
+    padding:2cqi 2cqi;
+    font-family:'Cinzel',serif;font-weight:700;
+    font-size:2.7cqi;letter-spacing:.18em;
+    color:#fff6dc;
+    background:linear-gradient(135deg,#962f3b,var(--maroon) 50%,#5a1420);
+    border:1px solid var(--gold-light);
+    border-radius:50px;
+    box-shadow:0 1.2cqi 3cqi rgba(122,31,43,.3);
+    cursor:pointer;position:relative;overflow:hidden;
+  }
+  .btn::after{
+    content:"";position:absolute;top:0;left:-60%;
+    width:35%;height:100%;
+    background:linear-gradient(100deg,transparent,rgba(255,240,200,.6),transparent);
+    transform:skewX(-20deg);
+    animation:sweep 3s ease-in-out infinite 1.5s;
+  }
+  .btn.light{color:var(--maroon);background:#fffaf2;border-color:rgba(160,112,31,.5);box-shadow:0 1cqi 2.5cqi rgba(110,40,30,.12);}
+  .s6-calls{text-align:center;font-family:'Cinzel',serif;font-weight:700;font-size:3.7cqi;letter-spacing:.04em;color:var(--maroon);}
+  .s6-calls a{color:var(--maroon);text-decoration:none;border-bottom:1px solid rgba(122,31,43,.35);}
+
+  .brand{position:absolute;left:0;right:0;top:95.6%;text-align:center;}
+  #screen6 .brand small{display:inline;font-size:2.2cqi;} #screen6 .brand b{display:inline;font-size:3cqi;margin-left:1.2cqi;letter-spacing:.35em;}
+  .brand small{display:block;font-family:'Cinzel',serif;font-size:1.9cqi;letter-spacing:.4em;color:var(--gold);}
+  .brand b{display:block;font-family:'Cinzel',serif;font-weight:700;font-size:4cqi;letter-spacing:.45em;color:var(--maroon);margin-top:.6cqi;padding-left:.45em;}
+
+  /* =====================================================
+     BLESSING CARD – screen 6, under the address (sends to WhatsApp)
+     ===================================================== */
+  .s6-bless{position:absolute;left:11%;right:11%;top:65.2%;padding:.9cqi;background:#fdf6e6;border:1px solid #c49a45;border-radius:1.2cqi;
+    box-shadow:0 1.5cqi 4cqi rgba(74,11,22,.3);}
+  .s6-bless>div{padding:1.4cqi 2.6cqi 2cqi;text-align:center;border:1px solid #c49a45;border-radius:.8cqi;
+    background:radial-gradient(ellipse at 50% 0%,#8f2236,#5a0d1b 75%);color:#fbefd8;}
+  .s6-bless .bk{font-family:'Great Vibes',cursive;font-size:8cqi;line-height:1.1;color:#f3d991;-webkit-text-stroke:.02em currentColor;}
+  .s6-bless input{display:block;width:100%;margin-top:1.4cqi;padding:1.2cqi 2cqi;border:1px solid #c49a45;background:#fffdf8;border-radius:.8cqi;
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:max(4cqi,16px);line-height:1.15;color:#4a1c14;user-select:text;-webkit-user-select:text;outline:none;}
+  .s6-bless input::placeholder{color:#8a6a5a;font-weight:600;}
+  .s6-bless .yn{display:grid;grid-template-columns:1fr 1fr;gap:1.4cqi;margin-top:1.4cqi;}
+  .s6-bless .yn button{padding:1.3cqi .4cqi;border:1px solid #c49a45;border-radius:.8cqi;background:rgba(255,255,255,.1);color:#fbefd8;
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:3.8cqi;line-height:1.1;cursor:pointer;}
+  .s6-bless .yn button.on{background:linear-gradient(180deg,#f3d991,#c49a45);color:#5a0d1b;}
+  .s6-bless .gbtn{display:flex;align-items:center;justify-content:center;gap:1.6cqi;width:100%;margin-top:1.6cqi;padding:1.8cqi 1cqi;border:0;border-radius:.9cqi;
+    background:linear-gradient(180deg,#f3d991,#c49a45);color:#5a0d1b;font-family:'Cinzel',serif;font-weight:700;font-size:3.4cqi;letter-spacing:.1em;cursor:pointer;
+    box-shadow:0 .6cqi 0 #8a6420,0 1.6cqi 3cqi rgba(0,0,0,.25);}
+  .s6-bless .gbtn:active{transform:translateY(.5cqi);box-shadow:0 .1cqi 0 #8a6420;}
+  .s6-bless .note{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:3.6cqi;margin-top:1.2cqi;color:#f4dcc4;}
+  .s6-bless .note:empty{display:none;}
+
+  /* =====================================================
+     LOCATION BUTTON (top left, on every screen) + POPUP
+     ===================================================== */
+  .loc-btn{
+    position:absolute;z-index:70;
+    top:calc(env(safe-area-inset-top, 0px) + 22px);left:12px;
+    width:34px;height:34px;border-radius:50%;
+    border:1.2px solid var(--gold-light);
+    background:linear-gradient(135deg,#962f3b,var(--maroon) 55%,#5a1420);
+    font-size:16px;line-height:32px;text-align:center;cursor:pointer;
+    box-shadow:0 0 0 3px rgba(255,248,225,.75);
+    animation:locPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes locPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,248,225,.75),0 0 0 0 rgba(233,180,70,.7);}50%{box-shadow:0 0 0 3px rgba(255,248,225,.75),0 0 0 9px rgba(233,180,70,0);}}
+
+  .loc-pop{position:absolute;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:0 22px;
+    background:rgba(40,15,10,.55);opacity:0;visibility:hidden;transition:opacity .4s ease, visibility .4s ease;}
+  .loc-pop.show{opacity:1;visibility:visible;}
+  .loc-card{position:relative;width:100%;max-width:360px;text-align:center;padding:30px 20px 22px;border-radius:18px;
+    background:linear-gradient(180deg,#fffaf0,#f8ecd2);border:1.5px solid #c9a24e;
+    box-shadow:inset 0 0 0 6px #fffaf0, inset 0 0 0 7.5px rgba(201,162,78,.7), 0 18px 40px rgba(0,0,0,.35);
+    transform:scale(.85) translateY(20px);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);}
+  .loc-pop.show .loc-card{transform:scale(1) translateY(0);}
+  .loc-pin{width:54px;height:54px;margin:-58px auto 6px;border-radius:50%;font-size:26px;line-height:52px;
+    background:linear-gradient(140deg,#962f3b,#7a1f2b 55%,#5a1420);border:1.5px solid #e9c877;
+    box-shadow:0 0 0 5px #fffaf0,0 0 18px rgba(233,180,70,.8);}
+  .loc-title{font-family:'Great Vibes',cursive;font-size:36px;line-height:1.2;color:var(--maroon);}
+  .loc-addr{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:20px;line-height:1.45;color:var(--text);margin-top:8px;}
+  .loc-addr b{font-family:'Cinzel',serif;font-weight:700;font-size:19px;color:var(--maroon);}
+  .loc-date{font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:var(--gold);margin-top:10px;letter-spacing:.04em;}
+  .loc-card .btn{font-size:16px;letter-spacing:.08em;padding:13px 10px;margin-top:16px;}
+  .loc-call{display:block;margin-top:12px;font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:var(--maroon);text-decoration:none;}
+  .loc-close{position:absolute;top:10px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(160,112,31,.5);
+    background:#fffaf2;color:var(--maroon);font-size:18px;line-height:30px;cursor:pointer;}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="stage" id="stage">
+
+    <!-- ============ SCREEN 1 : GANESHA ============ -->
+    <section class="screen active" id="screen1">
+      <div class="s1art">
+        <img class="full" src="screen1_new_files/inv4n_bg.jpg" alt="">
+        <div class="glow"></div>
+        <img class="bud_551" src="screen1_new_files/inv4n_bud_551.png" alt="">
+        <img class="bud_177" src="screen1_new_files/inv4n_bud_177.png" alt="">
+        <img class="bud_805" src="screen1_new_files/inv4n_bud_805.png" alt="">
+        <img class="bud_612" src="screen1_new_files/inv4n_bud_612.png" alt="">
+        <img class="bud_725" src="screen1_new_files/inv4n_bud_725.png" alt="">
+        <img class="bud_231" src="screen1_new_files/inv4n_bud_231.png" alt="">
+        <img class="bud_334" src="screen1_new_files/inv4n_bud_334.png" alt="">
+        <img class="bud_864" src="screen1_new_files/inv4n_bud_864.png" alt="">
+        <img class="bud_668" src="screen1_new_files/inv4n_bud_668.png" alt="">
+        <img class="bud_282" src="screen1_new_files/inv4n_bud_282.png" alt="">
+        <img class="jasL" src="screen1_new_files/inv4n_jasL.png" alt="">
+        <img class="jasR" src="screen1_new_files/inv4n_jasR.png" alt="">
+        <img class="bananaL" src="screen1_new_files/inv4n_bananaL.png" alt="">
+        <img class="bananaR" src="screen1_new_files/inv4n_bananaR.png" alt="">
+        <div class="petals" id="petals1"></div>
+      </div>
+      <div class="s1-text">
+        <p class="caps s1-mantra ln letters">|| SRI GANESHAYA NAMAHA ||</p>
+        <p class="script s1-welcome ln write">Welcome to the World of</p>
+        <p class="s1-names ln write" id="s1Names"></p>
+        <div class="orn ln fade"></div>
+        <p class="s1-invite ln fade"><span>cordially invite you <i>&amp;</i> your family to our</span></p>
+        <p class="caps s1-event ln letters" id="s1Event"></p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN 2 : BLESSINGS ============ -->
+    <section class="screen" id="screen2">
+      <div class="s2art">
+        <img class="full" src="screen2_moving_files/inv4s2_bg.jpg" alt="">
+        <img class="leavesTL" src="screen2_moving_files/inv4s2_leavesTL.png" alt="">
+        <img class="branchL" src="screen2_moving_files/inv4s2_branchL.png" alt="">
+        <img class="leavesTR" src="screen2_moving_files/inv4s2_leavesTR.png" alt="">
+        <img class="branchR" src="screen2_moving_files/inv4s2_branchR.png" alt="">
+        <img class="plantR" src="screen2_moving_files/inv4s2_plantR.png" alt="">
+        <img class="cowsL" src="screen2_moving_files/inv4s2_cowsL.png" alt="">
+        <img class="cowsR" src="screen2_moving_files/inv4s2_cowsR.png" alt="">
+        <img class="front" src="screen2_moving_files/inv4s2_front.png" alt="">
+      </div>
+      <div class="s2-head">
+        <p class="script s2-script ln write">With the Blessings of</p>
+        <p class="caps s2-small ln letters">OUR BELOVED ELDERS</p>
+      </div>
+      <div class="s2-petals" id="petals2"></div>
+      <div class="s2-frame ln pop">
+        <span class="cn tl"></span><span class="cn tr"></span><span class="cn bl"></span><span class="cn br"></span>
+        <p class="s2-om">&#2384;</p>
+      </div>
+      <div class="s2-names">
+        <p class="caps s2-sur ln letters" id="s2Sur1"></p>
+        <p class="s2-cpl ln write" id="s2Cpl1"></p>
+        <div class="s2-div ln fade"><span></span>&#10048;<span></span></div>
+        <p class="caps s2-sur ln letters" id="s2Sur2"></p>
+        <p class="s2-cpl ln write" id="s2Cpl2"></p>
+      </div>
+      <div class="s2-bless ln fade"><p class="vibe">Their love &amp; blessings<br>light up our new beginning</p></div>
+    </section>
+
+    <!-- ============ SCREEN 3 : PLEASE JOIN US ============ -->
+    <section class="screen" id="screen3">
+      <div class="s3art">
+        <img class="full" src="screen3_moving_files/inv4s3_bg.jpg" alt="">
+        <img class="str_178" src="screen3_moving_files/inv4s3_str_178.png" alt="">
+        <img class="str_232" src="screen3_moving_files/inv4s3_str_232.png" alt="">
+        <img class="str_322" src="screen3_moving_files/inv4s3_str_322.png" alt="">
+        <img class="str_378" src="screen3_moving_files/inv4s3_str_378.png" alt="">
+        <img class="str_482" src="screen3_moving_files/inv4s3_str_482.png" alt="">
+        <img class="str_533" src="screen3_moving_files/inv4s3_str_533.png" alt="">
+        <img class="str_633" src="screen3_moving_files/inv4s3_str_633.png" alt="">
+        <img class="str_686" src="screen3_moving_files/inv4s3_str_686.png" alt="">
+        <img class="str_786" src="screen3_moving_files/inv4s3_str_786.png" alt="">
+        <img class="bananaL" src="screen3_moving_files/inv4s3_bananaL.png" alt="">
+        <img class="bananaR" src="screen3_moving_files/inv4s3_bananaR.png" alt="">
+        <img class="rosesL" src="screen3_moving_files/inv4s3_rosesL.png" alt="">
+        <img class="rosesR" src="screen3_moving_files/inv4s3_rosesR.png" alt="">
+        <img class="elephant" src="screen3_moving_files/inv4s3_elephant.png" alt="">
+        <img class="lotusL" src="screen3_moving_files/inv4s3_lotusL.png" alt="">
+        <img class="lotusR" src="screen3_moving_files/inv4s3_lotusR.png" alt="">
+      </div>
+      <div class="s3-text">
+        <p class="s3-please ln letters">Please Join Us</p>
+        <p class="italic vibe s3-for ln fade">for the auspicious</p>
+        <div><p class="s3-title gold ln write" id="s3Title"></p></div>
+        <div class="orn ln fade"></div>
+        <p class="serif s3-date ln letters" id="s3Date"></p>
+        <p class="caps s3-mlabel ln letters">MUHURTHAM</p>
+        <div class="clockbox ln pop">
+          <div class="rays"></div>
+          <svg class="clock" id="clock" viewBox="0 0 100 100"></svg>
+        </div>
+        <p class="s3-time ln pill" id="s3Time"></p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN 4 : RITUALS ============ -->
+    <section class="screen" id="screen4">
+      <div class="s4art">
+        <img class="full" src="screen4_moving_files/screen4_moving_files/inv4s4_bg.jpg" alt="">
+        <img class="banana1" src="screen4_moving_files/screen4_moving_files/inv4s4_banana1.png" alt="">
+        <img class="banana2" src="screen4_moving_files/screen4_moving_files/inv4s4_banana2.png" alt="">
+        <img class="lotus" src="screen4_moving_files/screen4_moving_files/inv4s4_lotus.png" alt="">
+      </div>
+      <div class="s4-head">
+        <p class="s4-title ln write">The Rituals</p>
+        <div class="orn ln fade"></div>
+      </div>
+      <div class="tl">
+        <div class="tl-line"></div>
+        <div class="tl-rows" id="tlRows"></div>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN 5 : SEE YOU AT HOME (big full photo + names at bottom) ============ -->
+    <section class="screen" id="screen5">
+      <div class="s5art"><img src="screen5_moving_files/inv4s5_bg.jpg" alt=""></div>
+      <div class="s5glow"></div>
+      <div class="s6-head"><p class="script s6-title ln write">See you at home</p></div>
+      <div class="famwrap"><div class="s6-photo ln pop"><img src="invitation4%20image5.jpeg" alt="Family"></div></div>
+      <div class="s6-names">
+        <p class="vibe s6-love ln fade">With love,</p>
+        <p class="s6-host ln fade" id="s6Host"></p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN 6 : OUR NEW HOME + BLESSINGS ============ -->
+    <section class="screen" id="screen6">
+      <div class="s5art"><img src="screen5_moving_files/inv4s5_bg.jpg" alt=""></div>
+      <div class="s5glow"></div>
+      <div class="s7-head"><p class="script s7-title ln write">Our New Home</p></div>
+      <!-- surprise: scratch the gold card, doors open, light & Lakshmi footsteps -->
+      <div class="surprise ln pop" id="surprise">
+        <div class="sp-rays"></div>
+        <svg class="sp-home" viewBox="0 0 200 140">
+          <defs>
+            <linearGradient id="spGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7e3a2"/><stop offset=".5" stop-color="#b07b22"/><stop offset="1" stop-color="#f0d58a"/></linearGradient>
+            <linearGradient id="spRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a2b3a"/><stop offset="1" stop-color="#5a1420"/></linearGradient>
+            <linearGradient id="spDoor" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8f2236"/><stop offset="1" stop-color="#5a0d1b"/></linearGradient>
+            <radialGradient id="spLight" cx=".5" cy=".75" r=".75"><stop offset="0" stop-color="#fff7d0"/><stop offset=".45" stop-color="#ffd76a"/><stop offset="1" stop-color="#f0a23a"/></radialGradient>
+          </defs>
+          <!-- kalasam on the roof -->
+          <g class="sp-kalash">
+            <path d="M93 16 Q100 4 107 16" fill="#3f8f3a"/>
+            <circle cx="100" cy="13" r="4.2" fill="#e8a33a"/>
+            <path d="M93 18 h14 l-2 4 h-10 z" fill="url(#spGold)"/>
+            <ellipse cx="100" cy="27" rx="7" ry="6" fill="url(#spGold)"/>
+          </g>
+          <!-- roof -->
+          <polygon points="36,56 100,24 164,56" fill="url(#spRoof)" stroke="url(#spGold)" stroke-width="2.4" stroke-linejoin="round"/>
+          <!-- house -->
+          <rect x="48" y="56" width="104" height="66" fill="#fff8e6" stroke="url(#spGold)" stroke-width="2.2"/>
+          <!-- toran (mango leaves + marigold) -->
+          <g class="sp-toran">
+            <path d="M52 59 Q100 70 148 59" fill="none" stroke="#e8a33a" stroke-width="1.6"/>
+            <g fill="#3f8f3a">
+              <ellipse cx="58" cy="64" rx="2.2" ry="4.4"/><ellipse cx="68" cy="66.5" rx="2.2" ry="4.4"/><ellipse cx="78" cy="68" rx="2.2" ry="4.4"/>
+              <ellipse cx="88" cy="69" rx="2.2" ry="4.4"/><ellipse cx="100" cy="69.5" rx="2.2" ry="4.4"/><ellipse cx="112" cy="69" rx="2.2" ry="4.4"/>
+              <ellipse cx="122" cy="68" rx="2.2" ry="4.4"/><ellipse cx="132" cy="66.5" rx="2.2" ry="4.4"/><ellipse cx="142" cy="64" rx="2.2" ry="4.4"/>
+            </g>
+            <g fill="#f58a07">
+              <circle cx="63" cy="62.5" r="2"/><circle cx="73" cy="64.6" r="2"/><circle cx="83" cy="65.8" r="2"/><circle cx="94" cy="66.4" r="2"/>
+              <circle cx="106" cy="66.4" r="2"/><circle cx="117" cy="65.8" r="2"/><circle cx="127" cy="64.6" r="2"/><circle cx="137" cy="62.5" r="2"/>
+            </g>
+          </g>
+          <!-- windows -->
+          <rect class="sp-win" x="58" y="80" width="16" height="20" rx="8" ry="8" fill="url(#spLight)" stroke="url(#spGold)" stroke-width="1.6"/>
+          <rect class="sp-win" x="126" y="80" width="16" height="20" rx="8" ry="8" fill="url(#spLight)" stroke="url(#spGold)" stroke-width="1.6"/>
+          <!-- light inside the door + diya -->
+          <rect x="82" y="76" width="36" height="46" fill="url(#spLight)"/>
+          <g class="sp-diya">
+            <path d="M100 98 C104 103 103 108 100 110 C97 108 96 103 100 98 Z" fill="#ff9d1c"/>
+            <path d="M100 102 C101.5 104.5 101.5 107 100 108.3 C98.5 107 98.5 104.5 100 102 Z" fill="#fff4b8"/>
+            <path d="M91 111 Q100 120 109 111 Z" fill="url(#spGold)"/>
+          </g>
+          <!-- doors that open -->
+          <g class="sp-door sp-dl"><rect x="82" y="76" width="18" height="46" fill="url(#spDoor)" stroke="url(#spGold)" stroke-width="1.4"/><rect x="85" y="80" width="12" height="16" fill="none" stroke="#e9c877" stroke-width=".8"/><rect x="85" y="100" width="12" height="18" fill="none" stroke="#e9c877" stroke-width=".8"/><circle cx="97" cy="99" r="1.3" fill="#f3d58a"/></g>
+          <g class="sp-door sp-dr"><rect x="100" y="76" width="18" height="46" fill="url(#spDoor)" stroke="url(#spGold)" stroke-width="1.4"/><rect x="103" y="80" width="12" height="16" fill="none" stroke="#e9c877" stroke-width=".8"/><rect x="103" y="100" width="12" height="18" fill="none" stroke="#e9c877" stroke-width=".8"/><circle cx="103" cy="99" r="1.3" fill="#f3d58a"/></g>
+          <!-- step -->
+          <rect x="70" y="122" width="60" height="5" rx="1.5" fill="url(#spGold)"/>
+          <!-- Lakshmi footsteps walking in -->
+          <g class="sp-feet" fill="#c0262d">
+            <g class="sp-f1"><ellipse cx="92" cy="135" rx="2.6" ry="3.6"/><circle cx="90.6" cy="130.4" r=".8"/><circle cx="92.2" cy="130" r=".8"/><circle cx="93.7" cy="130.5" r=".8"/></g>
+            <g class="sp-f2"><ellipse cx="108" cy="132" rx="2.6" ry="3.6"/><circle cx="106.3" cy="127.5" r=".8"/><circle cx="107.8" cy="127" r=".8"/><circle cx="109.4" cy="127.4" r=".8"/></g>
+          </g>
+          <!-- side diyas -->
+          <g class="sp-lamp"><path d="M58 118 C60.5 121 60 124 58 125 C56 124 55.5 121 58 118 Z" fill="#ff9d1c"/><path d="M52 125 Q58 131 64 125 Z" fill="url(#spGold)"/></g>
+          <g class="sp-lamp"><path d="M142 118 C144.5 121 144 124 142 125 C140 124 139.5 121 142 118 Z" fill="#ff9d1c"/><path d="M136 125 Q142 131 148 125 Z" fill="url(#spGold)"/></g>
+        </svg>
+        <p class="sp-word">Welcome Home</p>
+        <canvas class="scratch" id="scratch"></canvas>
+      </div>
+      <div class="s6-venue">
+        <p class="caps ln letters">AT OUR NEW HOME</p>
+        <p class="addr ln fade" id="s6Addr"></p>
+      </div>
+      <div class="s6-btns">
+        <div class="btn-row ln fade">
+          <a class="btn" id="btnMap" target="_blank" rel="noopener">&#128205; DIRECTIONS</a>
+          <span class="btn light" id="btnAgain">&#8635; WATCH AGAIN</span>
+        </div>
+        <p class="s6-calls ln fade" id="s6Calls"></p>
+      </div>
+      <!-- blessing card – under the address, sends to WhatsApp -->
+      <div class="s6-bless ln fade">
+        <div>
+          <p class="bk">Bless our new home</p>
+          <input id="bName" placeholder="Your name (e.g. Kumar &amp; family)">
+          <div class="yn"><button data-v="Yes, we'll be there 🙏">Happily attending</button><button data-v="Sorry, we can't make it">Unable to attend</button></div>
+          <input id="bMsg" placeholder="Your blessing (optional)">
+          <button class="gbtn" id="bSend">&#128591; SEND BLESSINGS</button>
+          <p class="note" id="bNote"></p>
+        </div>
+      </div>
+      <div class="brand ln fade"><small>CRAFTED WITH LOVE BY</small><b>UNSAID</b></div>
+    </section>
+
+    <canvas id="sparkles"></canvas>
+  </div>
+
+  <div class="music-btn off" id="musicBtn">&#9835;</div>
+
+  <!-- location button on every screen -->
+  <div class="loc-btn" id="locBtn">&#128205;</div>
+  <div class="loc-pop" id="locPop">
+    <div class="loc-card">
+      <div class="loc-close" id="locClose">&#10005;</div>
+      <div class="loc-pin">&#128205;</div>
+      <p class="loc-title">Our New Home</p>
+      <p class="loc-addr" id="locAddr"></p>
+      <p class="loc-date" id="locDate"></p>
+      <a class="btn" id="locMap" target="_blank" rel="noopener">&#128205; OPEN GOOGLE MAPS</a>
+      <a class="loc-call" id="locCall"></a>
+    </div>
+  </div>
+</div>
+
+<audio id="bgMusic" loop preload="auto"></audio>
+
+<script>
+  /* =====================================================
+     ORDER DETAILS – change only this part for every new order
+     ===================================================== */
+  const ORDER = {
+    title: "Gruhapravesam",
+    welcome: "Ganesh & Bhargavi", // names on the first screen
+    eventName: "House Warming Ceremony", // line under the names on the first screen
+    hostLine: "Balamoni Bhargavi Ganesh Goud", // "With love" names on screen 5
+    elders: [ { surname: "Balamoni", names: "Krishnaiah & Jangamma" },
+                 { surname: "Palle", names: "Yadaiah & Shoba" } ],
+    date: "2026-12-03", // YYYY-MM-DD
+    muhurtham: "6:30 AM",
+    rituals: [ // cards go white, maroon, white, maroon... main: true = shows MUHURTHAM
+      { icon: "🏺", time: "6:30 AM", name: "Gruhapravesam", sub: "First step in with the kalasam", main: true },
+      { icon: "🪔", time: "8:00 AM", name: "Vastu Pooja", sub: "Blessings for the new home" },
+      { icon: "🔥", time: "9:00 AM", name: "Homam", sub: "Sacred fire for peace" },
+      { icon: "🌼", time: "10:30 AM", name: "Kalyanam", sub: "Divine wedding ritual" },
+      { icon: "🪷", time: "11:30 AM", name: "Satyanarayana Vratham", sub: "Pooja & prasadam" },
+      { icon: "🍛", time: "1:00 PM", name: "Lunch", sub: "Bhojanam with family & friends" }
+    ],
+    address: "<b>Balamoni Bhargavi Nilayam</b><br>13-131/1, Sai Nagar Colony<br>Edhamma Temple Road, Balapur<br>Hyderabad, Telangana",
+    mapLink: "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Balamoni Bhargavi Nilayam, 13-131/1, Sai Nagar Colony, Edhamma Temple Road, Balapur, Hyderabad, Telangana"),
+    whatsapp: "919640552020", // blessings come to this WhatsApp number (91 + number)
+    blessMsg: "Heartfelt congratulations on your Gruhapravesam! Wishing your family health, happiness and prosperity in your new home. 🏡✨", // used when guest writes nothing
+    phones: ["9640552020", "9705301222"],
+    music: "invitation4.mpeg" // song file
+  };
+
+  /* ---------- SPEED ---------- */
+  const PACE = {
+    letter: 0.035, // small capital lines: seconds per letter
+    pen: 0.075, // cursive lines: seconds per letter (pen writing speed)
+    fly: 0.8, // ritual cards
+    pop: 0.9, // photos / watch
+    diya: 0.35,
+    fade: 0.45,
+    hold: 3.5 // pause after each screen finishes
+  };
+
+  const $ = id => document.getElementById(id);
+
+  /* =====================================================
+     FILL IN THE TEXT
+     ===================================================== */
+  $("s1Names").textContent = ORDER.welcome;
+  $("s1Event").textContent = ORDER.eventName.toUpperCase();
+  $("s2Sur1").textContent = ORDER.elders[0].surname.toUpperCase();
+  $("s2Cpl1").textContent = ORDER.elders[0].names;
+  $("s2Sur2").textContent = ORDER.elders[1].surname.toUpperCase();
+  $("s2Cpl2").textContent = ORDER.elders[1].names;
+
+  const d = new Date(ORDER.date + "T00:00:00");
+  const day = d.getDate();
+  const sfx = (day % 10 === 1 && day !== 11) ? "st" : (day % 10 === 2 && day !== 12) ? "nd" : (day % 10 === 3 && day !== 13) ? "rd" : "th";
+  const weekName = d.toLocaleDateString("en-IN", { weekday: "long" });
+  const monthName = d.toLocaleDateString("en-IN", { month: "long" });
+  $("s3Title").textContent = ORDER.title;
+  $("s3Date").innerHTML = weekName + '<span class="bar">|</span>' + day + '<sup>' + sfx + '</sup>' + '<span class="bar">|</span>' + monthName + " " + d.getFullYear();
+
+  /* ---------- Screen 3: muhurtham watch ---------- */
+  function parseTime(t){
+    const m = t.match(/(\d+)(?::(\d+))?\s*(AM|PM)?/i) || [];
+    let h = +m[1] || 0; const mi = +m[2] || 0; const ap = (m[3] || "").toUpperCase();
+    if(ap === "PM" && h < 12) h += 12;
+    if(ap === "AM" && h === 12) h = 0;
+    return { h, mi };
+  }
+  $("s3Time").textContent = ORDER.muhurtham;
+
+  const mt = parseTime(ORDER.muhurtham);
+  (function buildClock(){
+    let s = '<defs><linearGradient id="cg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7e3a2"/><stop offset=".45" stop-color="#b07b22"/><stop offset=".6" stop-color="#fff1c0"/><stop offset="1" stop-color="#9c6d22"/></linearGradient></defs>' +
+            '<circle cx="50" cy="50" r="49" fill="url(#cg)"/><circle cx="50" cy="50" r="44" fill="#fffaf2"/>';
+    for(let i = 0; i < 60; i++){
+      const big = i % 5 === 0;
+      s += '<line x1="50" y1="' + (big ? 9 : 10) + '" x2="50" y2="' + (big ? 15 : 12.5) + '" stroke="' + (big ? "#7a1f2b" : "#c9a45a") + '" stroke-width="' + (big ? 1.8 : .7) + '" transform="rotate(' + i * 6 + ' 50 50)"/>';
+    }
+    const hrA = ((mt.h % 12) + mt.mi / 60) * 30, minA = mt.mi * 6;
+    s += '<line class="hand hr" x1="50" y1="50" x2="50" y2="28" stroke="#7a1f2b" stroke-width="3.6" stroke-linecap="round" style="--a:' + hrA + 'deg"/>' +
+         '<line class="hand min" x1="50" y1="50" x2="50" y2="17" stroke="#a0701f" stroke-width="2.2" stroke-linecap="round" style="--a:' + minA + 'deg"/>' +
+         '<line class="hand sec" x1="50" y1="56" x2="50" y2="14" stroke="#d4a64a" stroke-width=".8"/>' +
+         '<circle cx="50" cy="50" r="3" fill="#7a1f2b"/><circle cx="50" cy="50" r="1.2" fill="#f3d58a"/>';
+    $("clock").innerHTML = s;
+  })();
+
+  /* ---------- Screen 4: rituals timeline ---------- */
+  const diyaSVG =
+    '<svg viewBox="0 0 40 30"><defs><linearGradient id="dg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f7e3a2"/><stop offset="1" stop-color="#a0701f"/></linearGradient></defs>' +
+    '<path class="flame" d="M20 1 C25 7 24 13 20 15 C16 13 15 7 20 1 Z" fill="#ffb627"/>' +
+    '<path d="M20 6 C22 9 22 12 20 13.5 C18 12 18 9 20 6 Z" fill="#fff2b0"/>' +
+    '<path d="M3 16 Q20 32 37 16 Z" fill="url(#dg)"/>' +
+    '<ellipse cx="20" cy="16" rx="17" ry="2.6" fill="#f3d58a"/></svg>';
+
+  $("tlRows").innerHTML = ORDER.rituals.map((r, i) => {
+    const side = i % 2 === 0 ? "left" : "right";
+    return '<div class="row ' + side + '">' +
+      '<div class="diya ln pop">' + diyaSVG + '</div>' +
+      '<div class="tcard ' + (i % 2 === 1 ? "main " : "") + 'ln ' + (side === "left" ? "fromL" : "fromR") + '">' +
+        '<p class="tm">' + (side === "right" ? '<span class="ic">' + (r.icon || "") + '</span>' : "") +
+          r.time +
+          (side === "left" ? '<span class="ic">' + (r.icon || "") + '</span>' : "") + '</p>' +
+        (r.main ? '<p class="mu">MUHURTHAM</p>' : '') + '<p class="nm">' + r.name + '</p>' +
+        (r.sub ? '<p class="sb">' + r.sub + '</p>' : '') +
+      '</div></div>';
+  }).join("");
+
+  /* ---------- Screen 5 & 6: names, address, directions, phones ---------- */
+  $("s6Host").textContent = ORDER.hostLine;
+  $("s6Addr").innerHTML = ORDER.address;
+  const plainAddr = ORDER.address.replace(/<br\s*\/?>/gi, ", ").replace(/<[^>]+>/g, "");
+  $("btnMap").href = ORDER.mapLink || ("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(plainAddr));
+  $("s6Calls").innerHTML = "&#9742; " + ORDER.phones.map(p => '<a href="tel:' + p + '">' + p + '</a>').join(" &nbsp;·&nbsp; ");
+
+  /* =====================================================
+     SPLIT CAPITAL LINES INTO SINGLE LETTERS
+     ===================================================== */
+  function splitLetters(el){
+    [...el.childNodes].forEach(node => {
+      if(node.nodeType === 3){
+        const frag = document.createDocumentFragment();
+        [...node.textContent].forEach(c => {
+          const s = document.createElement("span");
+          s.className = "ch"; s.textContent = c;
+          frag.appendChild(s);
+        });
+        node.replaceWith(frag);
+      } else if(node.nodeType === 1){
+        splitLetters(node);
+      }
+    });
+  }
+  document.querySelectorAll(".ln.letters").forEach(splitLetters);
+
+  /* =====================================================
+     PLAY A SCREEN LINE BY LINE – returns total seconds
+     ===================================================== */
+  function playLines(screen, start){
+    let t = start;
+    screen.classList.remove("go"); void screen.offsetWidth;
+    screen.querySelectorAll(".ln").forEach(el => {
+      el.classList.remove("on");
+      void el.offsetWidth;
+      let dur;
+      if(el.classList.contains("letters")){
+        const chars = el.querySelectorAll(".ch");
+        chars.forEach((c, i) => c.style.animationDelay = (t + i * PACE.letter) + "s");
+        dur = chars.length * PACE.letter + 0.25;
+      } else if(el.classList.contains("write")){
+        const len = el.textContent.length;
+        el.style.setProperty("--t", t + "s");
+        el.style.setProperty("--d", (len * PACE.pen + 0.4) + "s");
+        dur = len * PACE.pen + 0.3;
+      } else if(el.classList.contains("fromL") || el.classList.contains("fromR")){
+        el.style.animationDelay = t + "s";
+        dur = PACE.fly;
+      } else if(el.classList.contains("step")){
+        el.style.animationDelay = t + "s";
+        dur = 0.45;
+      } else if(el.classList.contains("pop")){
+        el.style.animationDelay = t + "s";
+        if(el.classList.contains("clockbox")) $("clock").style.setProperty("--hd", (t + 0.5) + "s");
+        dur = el.classList.contains("diya") ? PACE.diya : PACE.pop;
+      } else {
+        el.style.animationDelay = t + "s";
+        dur = PACE.fade;
+      }
+      el.classList.add("on");
+      t += dur;
+    });
+    screen.classList.add("go");
+    return t;
+  }
+
+  /* =====================================================
+     SCREEN CHANGING (automatic, like a video)
+     ===================================================== */
+  const screens = [...document.querySelectorAll(".screen")];
+  const N = screens.length;
+  let autoTimer, s1Started = false, cur = 1;
+
+  function goToScreen(n){
+    const next = $("screen" + n);
+    if(!next) return;
+    s1Started = true;
+    screens.forEach(s => s.classList.remove("active"));
+    next.classList.add("active");
+    cur = n;
+    if(n === N) setTimeout(initScratch, 50);
+    const total = playLines(next, 1.0);
+    clearTimeout(autoTimer);
+    if(n !== N) autoTimer = setTimeout(() => goToScreen(n + 1), (total + PACE.hold) * 1000);
+  }
+
+  /* Screen 1: picture is already moving – start the text after a moment */
+  function startS1(){
+    if(s1Started) return;
+    s1Started = true;
+    const total = playLines($("screen1"), 0);
+    autoTimer = setTimeout(() => goToScreen(2), (total + PACE.hold) * 1000);
+  }
+  setTimeout(startS1, 1200);
+
+  // falling marigold petals on screen 1
+  (function makePetals(){
+    const box = $("petals1"), colors = ["#f7a21b","#ffc93c","#f58a07","#ffd76a","#e85d8a"];
+    for(let i = 0; i < 18; i++){
+      const p = document.createElement("span");
+      p.className = "petal";
+      p.style.left = (Math.random() * 95) + "%";
+      p.style.background = colors[i % colors.length];
+      p.style.animationDuration = (6 + Math.random() * 5) + "s";
+      p.style.animationDelay = (Math.random() * 7) + "s";
+      box.appendChild(p);
+    }
+  })();
+
+  // blessing petals & akshinthalu falling on screen 2
+  (function makePetals2(){
+    const box = $("petals2"), colors = ["#f7a21b","#ffd76a","#e85d8a","#fff3c4","#f58a07"];
+    for(let i = 0; i < 22; i++){
+      const p = document.createElement("span");
+      p.className = "petal";
+      p.style.left = (Math.random() * 95) + "%";
+      p.style.background = colors[i % colors.length];
+      p.style.animationDuration = (6 + Math.random() * 5) + "s";
+      p.style.animationDelay = (Math.random() * 7) + "s";
+      box.appendChild(p);
+    }
+  })();
+
+  $("btnAgain").addEventListener("click", () => goToScreen(1));
+
+  /* =====================================================
+     LOCATION POPUP – opens from the 📍 button on any screen
+     (the video waits while it is open, then carries on)
+     ===================================================== */
+  $("locAddr").innerHTML = ORDER.address;
+  $("locDate").innerHTML = weekName + " · " + day + "<sup>" + sfx + "</sup> " + monthName + " · " + ORDER.muhurtham;
+  $("locMap").href = $("btnMap").href;
+  $("locCall").innerHTML = "&#9742; " + ORDER.phones[0];
+  $("locCall").href = "tel:" + ORDER.phones[0];
+  function openLoc(){ clearTimeout(autoTimer); $("locPop").classList.add("show"); }
+  function closeLoc(){
+    $("locPop").classList.remove("show");
+    clearTimeout(autoTimer);
+    if(cur !== N) autoTimer = setTimeout(() => goToScreen(cur + 1), 3000);
+  }
+  $("locBtn").addEventListener("click", e => { e.stopPropagation(); openLoc(); });
+  $("locClose").addEventListener("click", closeLoc);
+  $("locPop").addEventListener("click", e => { if(e.target === $("locPop")) closeLoc(); });
+
+  /* =====================================================
+     SCRATCH CARD – guest scratches the gold to see the new home
+     ===================================================== */
+  const sc = $("scratch"), sctx = sc.getContext("2d");
+  let scDone = false, scDown = false, scMoves = 0;
+  function initScratch(){
+    scDone = false; $("surprise").classList.remove("revealed");
+    const w = sc.offsetWidth, h = sc.offsetHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
+    if(!w || !h) return;
+    sc.width = w * dpr; sc.height = h * dpr;
+    sctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    sctx.globalCompositeOperation = "source-over";
+    const g = sctx.createLinearGradient(0, 0, w, h);
+    g.addColorStop(0, "#f7e3a2"); g.addColorStop(.3, "#c99a3a"); g.addColorStop(.5, "#fff1c0"); g.addColorStop(.7, "#b07b22"); g.addColorStop(1, "#f0d58a");
+    sctx.fillStyle = g; sctx.fillRect(0, 0, w, h);
+    for(let i = 0; i < 70; i++){ // little sparkles on the gold
+      sctx.fillStyle = "rgba(255,255,255," + (Math.random() * .6) + ")";
+      sctx.beginPath(); sctx.arc(Math.random() * w, Math.random() * h, Math.random() * 1.6 + .4, 0, Math.PI * 2); sctx.fill();
+    }
+    sctx.strokeStyle = "rgba(122,31,43,.55)"; sctx.lineWidth = 1.5; sctx.setLineDash([5, 4]);
+    sctx.strokeRect(8, 8, w - 16, h - 16); sctx.setLineDash([]);
+    sctx.textAlign = "center"; sctx.fillStyle = "#7a1f2b";
+    sctx.font = "700 " + Math.round(w * .085) + "px Cinzel, serif";
+    sctx.fillText("✦ SCRATCH ✦", w / 2, h * .36);
+    let fs = w * .13; // shrink the line until it fits inside the card
+    do { sctx.font = Math.round(fs) + "px 'Great Vibes', cursive"; fs -= 1; } while(sctx.measureText("& come see our home").width > w * .84 && fs > 8);
+    sctx.fillText("& come see our home", w / 2, h * .58);
+    sctx.font = Math.round(w * .13) + "px serif";
+    sctx.fillText("👆", w / 2, h * .84);
+  }
+  function scratchAt(e){
+    const r = sc.getBoundingClientRect();
+    const x = (e.clientX - r.left) * (sc.offsetWidth / r.width), y = (e.clientY - r.top) * (sc.offsetHeight / r.height);
+    sctx.globalCompositeOperation = "destination-out";
+    sctx.beginPath(); sctx.arc(x, y, sc.offsetWidth * .09, 0, Math.PI * 2); sctx.fill();
+    if(++scMoves % 8 === 0) checkScratch();
+  }
+  function checkScratch(){
+    if(scDone) return;
+    const d = sctx.getImageData(0, 0, sc.width, sc.height).data;
+    let clear = 0, total = 0;
+    for(let i = 3; i < d.length; i += 64){ total++; if(d[i] === 0) clear++; }
+    if(clear / total > .45){ scDone = true; $("surprise").classList.add("revealed"); }
+  }
+  sc.addEventListener("pointerdown", e => { scDown = true; sc.setPointerCapture(e.pointerId); scratchAt(e); });
+  sc.addEventListener("pointermove", e => { if(scDown) scratchAt(e); });
+  sc.addEventListener("pointerup", () => { scDown = false; checkScratch(); });
+  sc.addEventListener("pointercancel", () => { scDown = false; });
+
+  /* =====================================================
+     BLESSING CARD → opens WhatsApp with the guest's blessing
+     ===================================================== */
+  let bAns = "";
+  document.querySelectorAll(".s6-bless .yn button").forEach(b => b.addEventListener("click", () => {
+    bAns = b.dataset.v;
+    document.querySelectorAll(".s6-bless .yn button").forEach(x => x.classList.toggle("on", x === b));
+  }));
+  $("bSend").addEventListener("click", () => {
+    const n = $("bName").value.trim(), m = $("bMsg").value.trim(), note = $("bNote");
+    if(!n || !bAns){ note.textContent = "Please enter your name and pick an option."; return; }
+    note.textContent = "Thank you for your blessings! 💛";
+    const text = "🏡 Gruhapravesam Blessings 🙏\nName: " + n + "\n" + bAns + "\n\n" + (m || ORDER.blessMsg);
+    window.open("https://wa.me/" + ORDER.whatsapp + "?text=" + encodeURIComponent(text), "_blank");
+  });
+
+  /* =====================================================
+     MUSIC – starts on first touch anywhere, button to stop
+     ===================================================== */
+  const music = $("bgMusic"), musicBtn = $("musicBtn");
+  music.src = ORDER.music;
+  function setMusic(on){
+    if(on){
+      music.play().then(() => { musicBtn.classList.add("playing"); musicBtn.classList.remove("off"); }).catch(()=>{});
+    } else {
+      music.pause();
+      musicBtn.classList.remove("playing"); musicBtn.classList.add("off");
+    }
+  }
+  setMusic(true);
+  document.addEventListener("pointerdown", function first(e){
+    if(e.target === musicBtn) return;
+    setMusic(true);
+    document.removeEventListener("pointerdown", first);
+  });
+  musicBtn.addEventListener("click", e => { e.stopPropagation(); setMusic(music.paused); });
+
+  /* =====================================================
+     GOLD DUST
+     ===================================================== */
+  const cv = $("sparkles"), ctx = cv.getContext("2d");
+  let W = 0, H = 0, dots = [];
+  function size(){
+    const rc = cv.getBoundingClientRect(), dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = rc.width; H = rc.height;
+    cv.width = W * dpr; cv.height = H * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+  window.addEventListener("resize", size); size();
+  function floater(y){
+    dots.push({ x: Math.random() * W, y, vx: (Math.random() - .5) * .15, vy: -.12 - Math.random() * .3,
+                life: 400 + Math.random() * 400, r: .5 + Math.random() * 1.5, tw: Math.random() * 6 });
+  }
+  for(let i = 0; i < 30; i++) floater(Math.random() * H);
+  function tick(){
+    ctx.clearRect(0, 0, W, H);
+    for(let i = dots.length - 1; i >= 0; i--){
+      const p = dots[i];
+      p.x += p.vx; p.y += p.vy; p.life--; p.tw += .08;
+      if(p.life <= 0 || p.y < -10){ dots.splice(i, 1); floater(H + 5); continue; }
+      const f = Math.min(1, p.life / 40) * (0.5 + 0.5 * Math.sin(p.tw));
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 3);
+      g.addColorStop(0, "rgba(255,246,205," + f + ")");
+      g.addColorStop(.35, "rgba(240,196,92," + f * .8 + ")");
+      g.addColorStop(1, "rgba(240,196,92,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r * 3, 0, Math.PI * 2); ctx.fill();
+    }
+    requestAnimationFrame(tick);
+  }
+  tick();
+</script>
+</body>
+</html>
+
+
+On Tue, 17 Nov, 2026, 7:34 pm Soumya from Deltafour®, <soumya@deltafour.co> wrote:
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<meta name="theme-color" content="#7a1f2b">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Gruhapravesam | Balamoni Family</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@500;600;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&display=swap" rel="stylesheet">
 <style>
   /* =====================================================
@@ -68,6 +1270,11 @@
   .serif {font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--text);line-height:1.35;}
   .italic{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;color:var(--gold);}
   .caps  {font-family:'Cinzel Decorative',serif;font-weight:700;letter-spacing:.22em;color:var(--gold);}
+
+  /* every cursive line = same bold look as "Ganesh & Bhargavi" */
+  .script,.s1-names,.s2-cpl,.s6-host,.vibe{-webkit-text-stroke:.022em currentColor;paint-order:stroke fill;}
+  .vibe{font-family:'Great Vibes',cursive !important;font-style:normal !important;font-weight:400 !important;color:var(--maroon) !important;}
+  .caps{font-weight:900;}
 
   /* Gold foil text that shines */
   .gold{
@@ -174,7 +1381,7 @@
   /* =====================================================
      SCREEN 1 – GANESHA (moving flowers + banana leaves)
      ===================================================== */
-  .s1-text{position:absolute;left:6%;right:6%;top:28%;text-align:center;}
+  .s1-text{position:absolute;left:8%;right:8%;top:26.5%;text-align:center;}
   .s1-text::before{content:"";position:absolute;left:-8%;right:-8%;top:-12%;bottom:-14%;z-index:-1;
     background:radial-gradient(closest-side, rgba(255,250,238,.96) 0%, rgba(255,250,238,.88) 60%, rgba(255,250,238,0) 100%);}
   .s1-text .script,.s1-text .italic,.s1-text .caps{text-shadow:0 0 2cqi #fffaf0, 0 0 1cqi #fffaf0;}
@@ -215,13 +1422,13 @@
     8%  {opacity:.95;}
     100%{transform:translate(10cqi,185cqi) rotate(560deg);opacity:0;}
   }
-  .s1-mantra{font-size:3.2cqi;color:#8a5a12;}
-  .s1-welcome{font-size:6.6cqi;margin-top:7cqi;white-space:nowrap;}
-  .s1-names{font-family:'Great Vibes',cursive;font-size:10cqi;line-height:1.2;white-space:nowrap;margin-top:4.5cqi;
+  .s1-mantra{font-size:3.6cqi;letter-spacing:.08em;white-space:nowrap;color:#7a4a0a;}
+  .s1-welcome{font-size:8.6cqi;margin-top:4.5cqi;white-space:nowrap;}
+  .s1-names{font-family:'Great Vibes',cursive;font-size:10.5cqi;line-height:1.2;white-space:nowrap;margin-top:3cqi;
     color:#7a1f2b;text-shadow:0 0 .2cqi #e9c877, 0 .3cqi .6cqi rgba(160,112,31,.45), 0 0 3cqi #fffaf0;}
-  .s1-text .orn{margin:6cqi auto 5.5cqi;width:38cqi;}
-  .s1-invite{font-size:3.8cqi;color:#7c4e10;}
-  .s1-event{font-size:4cqi;letter-spacing:.2em;color:var(--maroon);margin-top:5cqi;}
+  .s1-text .orn{margin:3.4cqi auto 2.6cqi;width:40cqi;}
+  .s1-invite{font-family:'Cormorant Garamond',serif;font-style:normal;font-weight:700;font-size:5.4cqi;line-height:1.3;color:#4a1c14;text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
+  .s1-event{font-size:4.2cqi;letter-spacing:.04em;color:var(--maroon);margin-top:3.4cqi;white-space:nowrap;}
 
   /* =====================================================
      SCREEN 2 – BLESSINGS (moving cows + elders' names)
@@ -239,12 +1446,12 @@
   .s2art .front{left:11.534%;top:81.148%;width:85.554%;}
   @keyframes cowBob{0%,100%{transform:rotate(-1deg) translateY(0);}50%{transform:rotate(1deg) translateY(-1.2%);}}
 
-  .s2-head{position:absolute;left:0;right:0;top:6%;text-align:center;}
-  .s2-script{font-size:7.4cqi;white-space:nowrap;}
-  .s2-small{font-size:2.6cqi;letter-spacing:.3em;margin-top:3cqi;color:var(--maroon);}
+  .s2-head{position:absolute;left:0;right:0;top:5.4%;text-align:center;}
+  .s2-script{font-size:9.4cqi;white-space:nowrap;}
+  .s2-small{font-size:3.4cqi;letter-spacing:.12em;margin-top:1.6cqi;color:var(--maroon);}
 
   /* elders' names – the hero of this screen */
-  .s2-frame{position:absolute;left:13%;right:13%;top:18.5%;height:27.5%;
+  .s2-frame{position:absolute;left:11%;right:11%;top:18.5%;height:30%;
     background:linear-gradient(180deg,rgba(255,252,244,.94),rgba(255,247,230,.9));
     border:1px solid #c9a24e;border-radius:2cqi;
     box-shadow:inset 0 0 0 1.2cqi rgba(255,252,244,.9), inset 0 0 0 1.45cqi rgba(201,162,78,.7), 0 2cqi 5cqi rgba(110,60,20,.18);}
@@ -258,17 +1465,17 @@
     box-shadow:0 0 0 .8cqi rgba(255,250,238,.95),0 0 4cqi rgba(233,180,70,.8);
     font-size:6cqi;line-height:10.4cqi;text-align:center;color:#f3d58a;animation:omGlow 2.6s ease-in-out infinite;}
   @keyframes omGlow{0%,100%{box-shadow:0 0 0 .8cqi rgba(255,250,238,.95),0 0 2cqi rgba(233,180,70,.5);}50%{box-shadow:0 0 0 .8cqi rgba(255,250,238,.95),0 0 6cqi rgba(233,180,70,1);}}
-  .s2-names{position:absolute;left:13%;right:13%;top:23.6%;text-align:center;}
-  .s2-sur{font-size:2.8cqi;letter-spacing:.45em;padding-left:.45em;color:var(--gold);}
-  .s2-cpl{font-family:'Great Vibes',cursive;font-size:7cqi;line-height:1.25;color:var(--maroon);white-space:nowrap;margin-top:.8cqi;
+  .s2-names{position:absolute;left:11%;right:11%;top:23.2%;text-align:center;}
+  .s2-sur{font-size:3.8cqi;letter-spacing:.3em;padding-left:.3em;color:#8a5a12;}
+  .s2-cpl{font-family:'Great Vibes',cursive;font-size:8.6cqi;line-height:1.2;color:var(--maroon);white-space:nowrap;margin-top:.6cqi;
     text-shadow:0 .2cqi 0 rgba(233,200,119,.7);}
-  .s2-div{display:flex;align-items:center;justify-content:center;gap:2.4cqi;margin:2.6cqi 0 2.4cqi;font-size:3.6cqi;color:#b8862b;}
+  .s2-div{display:flex;align-items:center;justify-content:center;gap:2.4cqi;margin:2cqi 0 1.8cqi;font-size:4cqi;color:#b8862b;}
   .s2-div span{width:16cqi;height:1px;background:linear-gradient(90deg,transparent,#b8862b);}
   .s2-div span:last-child{background:linear-gradient(90deg,#b8862b,transparent);}
   /* blessing petals falling on screen 2 */
   .s2-petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2;}
-  .s2-bless{position:absolute;left:8%;right:8%;top:48%;text-align:center;}
-  .s2-bless p{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:3.8cqi;line-height:1.6;color:#6b3418;text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
+  .s2-bless{position:absolute;left:10%;right:10%;top:50.5%;text-align:center;}
+  .s2-bless p{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:7.4cqi;line-height:1.2;color:#5e2c12;text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
 
   /* =====================================================
      SCREEN 3 – PLEASE JOIN US (moving elephant picture)
@@ -295,31 +1502,31 @@
   @keyframes eleWalk{0%,100%{transform:translateY(0) rotate(0deg);}25%{transform:translateY(-1.2%) rotate(-1deg);}50%{transform:translateY(0) rotate(0deg);}75%{transform:translateY(-1.2%) rotate(1deg);}}
 
   /* text starts below the hanging flowers */
-  .s3-text{position:absolute;left:8%;right:8%;top:34.4%;text-align:center;}
+  .s3-text{position:absolute;left:10%;right:10%;top:33.6%;text-align:center;}
   .s3-text::before{
     content:"";position:absolute;left:-14%;right:-14%;top:-8%;bottom:-8%;z-index:-1;
     background:radial-gradient(closest-side, rgba(255,250,238,.95) 0%, rgba(255,250,238,.85) 55%, rgba(255,250,238,0) 100%);
   }
   .s3-text .script,.s3-text .serif,.s3-text .italic,.s3-text .caps{text-shadow:0 0 2cqi #fffaf0, 0 0 1cqi #fffaf0;}
-  .s3-please{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:4.5cqi;letter-spacing:.07em;line-height:1.2;white-space:nowrap;
+  .s3-please{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:5cqi;letter-spacing:.03em;line-height:1.2;white-space:nowrap;
     color:var(--maroon);text-shadow:0 .3cqi 0 rgba(233,200,119,.9), 0 0 2cqi #fffaf0 !important;}
   .s3-please::before,.s3-please::after{content:"";display:inline-block;width:4cqi;height:1px;vertical-align:middle;margin:0 1.6cqi;
     background:linear-gradient(90deg,transparent,var(--gold));}
   .s3-please::after{background:linear-gradient(90deg,var(--gold),transparent);}
-  .s3-for{font-size:3.4cqi;margin-top:2cqi;}
-  .s3-title{font-family:'Great Vibes',cursive;font-size:10.4cqi;line-height:1.15;margin-top:.6cqi;
+  .s3-for{font-size:6.2cqi;line-height:1.05;margin-top:.8cqi;}
+  .s3-title{font-family:'Great Vibes',cursive;font-size:10.8cqi;line-height:1.1;margin-top:.4cqi;
     background:linear-gradient(100deg,#7a1f2b 0%,#a8323f 22%,#d9a441 38%,#fff0bd 48%,#d9a441 58%,#a8323f 76%,#7a1f2b 100%) !important;
     background-size:220% 100% !important;-webkit-background-clip:text !important;background-clip:text !important;
     filter:drop-shadow(0 0 1.2cqi rgba(255,236,180,.95)) drop-shadow(0 .3cqi .4cqi rgba(122,31,43,.35));}
-  .s3-hw{font-size:2.5cqi;letter-spacing:.25em;color:var(--maroon);margin-top:1.6cqi;}
-  .s3-text .orn{margin:2.2cqi auto;}
-  .s3-date{font-size:3.7cqi;margin-top:0;white-space:nowrap;}
+  .s3-hw{font-size:3.5cqi;letter-spacing:.12em;white-space:nowrap;color:var(--maroon);margin-top:1.6cqi;}
+  .s3-text .orn{margin:1.1cqi auto;}
+  .s3-date{font-size:5cqi;font-weight:700;color:#4a1c14;margin-top:0;white-space:nowrap;}
   .s3-date .bar{color:var(--gold);margin:0 1cqi;}
   .s3-date sup{font-size:.6em;}
-  .s3-mlabel{font-size:2.3cqi;letter-spacing:.35em;margin-top:2.4cqi;color:var(--maroon);}
+  .s3-mlabel{font-size:3.4cqi;letter-spacing:.2em;margin-top:1cqi;color:var(--maroon);}
 
-  /* muhurtham watch (smaller) */
-  .clockbox{position:relative;width:14cqi;height:14cqi;margin:2.8cqi auto 0;}
+  /* muhurtham watch */
+  .clockbox{position:relative;width:9cqi;height:9cqi;margin:1.6cqi auto 0;}
   .rays{
     position:absolute;inset:-3.6cqi;border-radius:50%;
     background:repeating-conic-gradient(rgba(240,190,80,.55) 0 3deg, transparent 3deg 12deg);
@@ -338,8 +1545,8 @@
 
   /* highlighted muhurtham time */
   .s3-time{
-    display:inline-block;margin-top:2.6cqi;padding:.6cqi 4.5cqi .8cqi;
-    font-family:'Cinzel',serif;font-weight:700;font-size:4.2cqi;letter-spacing:.08em;line-height:1.1;
+    display:inline-block;margin-top:1.8cqi;padding:.5cqi 4.5cqi .7cqi;
+    font-family:'Cinzel',serif;font-weight:700;font-size:5.2cqi;letter-spacing:.08em;line-height:1.1;
     color:#fff3c4;text-shadow:0 0 1.5cqi rgba(255,215,120,.9);
     background:linear-gradient(135deg,#962f3b,var(--maroon) 50%,#5a1420);
     border:1px solid var(--gold-light);border-radius:50px;
@@ -362,9 +1569,9 @@
   @keyframes bananaSway{0%,100%{transform:rotate(-3deg) skewY(0deg);}50%{transform:rotate(3deg) skewY(-1.5deg);}}
 
   .s4-head{position:absolute;left:10%;right:10%;top:8%;text-align:center;white-space:nowrap;}
-  .s4-title{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:6.6cqi;color:var(--gold);line-height:1.2;letter-spacing:.04em;}
+  .s4-title{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:7.8cqi;color:var(--maroon);line-height:1.2;letter-spacing:.04em;}
 
-  .tl{position:absolute;left:9%;right:9%;top:18.5%;bottom:20%;}
+  .tl{position:absolute;left:10%;right:10%;top:17%;bottom:13%;}
   .tl-line{
     position:absolute;left:50%;top:3%;bottom:3%;width:2px;margin-left:-1px;
     background:linear-gradient(#e9c877,#c99a3a 50%,#e9c877);
@@ -373,8 +1580,8 @@
   #screen4.go .tl-line{animation:grow 6s ease-out forwards 1s;}
   @keyframes grow{to{transform:scaleY(1);}}
   .tl-rows{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;}
-  .row{display:grid;grid-template-columns:1fr 10cqi 1fr;align-items:center;}
-  .row .diya{grid-column:2;justify-self:center;width:8cqi;}
+  .row{display:grid;grid-template-columns:1fr 8cqi 1fr;align-items:center;}
+  .row .diya{grid-column:2;justify-self:center;width:7cqi;}
   .row.left  .tcard{grid-column:1;grid-row:1;text-align:right;}
   .row.right .tcard{grid-column:3;grid-row:1;text-align:left;}
 
@@ -386,58 +1593,90 @@
     background:rgba(255,252,246,.95);
     border:1px solid rgba(160,112,31,.45);
     border-radius:1.8cqi;
-    padding:1.5cqi 2.4cqi;
+    padding:1.3cqi 1.8cqi;
     box-shadow:0 1.2cqi 3cqi rgba(110,40,30,.14);
   }
-  .tcard .tm{font-family:'Cinzel',serif;font-weight:700;font-size:2.1cqi;letter-spacing:.04em;white-space:nowrap;color:var(--gold);}
-  .tcard .tm .ic{font-size:2.8cqi;vertical-align:-.3cqi;margin:0 .5cqi;}
-  .tcard .nm{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:3.6cqi;line-height:1.1;color:var(--maroon);margin-top:.3cqi;}
-  .tcard .sb{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:2.7cqi;line-height:1.15;color:var(--text);margin-top:.2cqi;}
+  .tcard .tm{font-family:'Cinzel',serif;font-weight:700;font-size:3.3cqi;letter-spacing:0;white-space:nowrap;color:#8a5a12;}
+  .tcard .tm .ic{font-size:3.4cqi;vertical-align:-.3cqi;margin:0 .5cqi;}
+  .tcard .nm{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4.9cqi;line-height:1.05;color:var(--maroon);margin-top:.3cqi;}
+  .tcard .sb{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:3.6cqi;line-height:1.15;color:var(--text);margin-top:.2cqi;}
   .tcard.main{background:linear-gradient(140deg,#962f3b,var(--maroon) 55%,#5a1420);border-color:var(--gold-light);}
   .tcard.main .tm{color:#f3d58a;}
   .tcard.main .nm{color:#fff6dc;}
   .tcard.main .sb{color:#f4dcc4;}
+  .tcard .mu{font-family:'Cinzel',serif;font-weight:700;font-size:2.4cqi;letter-spacing:.12em;color:var(--maroon);margin-top:.2cqi;}
 
   /* =====================================================
-     SCREEN 5 – SEE YOU AT HOME (moving peacock background)
+     SCREEN 5 & 6 – moving peacock background
      ===================================================== */
   .s5art{position:absolute;inset:0;overflow:hidden;}
+  #screen6 .s5art img{animation-direction:alternate-reverse;}
   .s5art img{position:absolute;left:-6%;top:-4%;width:112%;height:108%;object-fit:cover;animation:feather 14s ease-in-out infinite alternate;}
   @keyframes feather{0%{transform:scale(1) rotate(0deg) translate(0,0);}50%{transform:scale(1.08) rotate(1.2deg) translate(-1.5%,1%);}100%{transform:scale(1.02) rotate(-1deg) translate(1.5%,-1%);}}
   .s5glow{position:absolute;inset:0;background:radial-gradient(60% 45% at 50% 52%, rgba(255,250,240,.75), rgba(255,250,240,0) 75%);animation:haloPulse 4s ease-in-out infinite;}
-  #screen5 .s6-love,#screen5 .s6-name,#screen5 .s6-fam,#screen5 .addr,#screen5 .caps,#screen5 .s6-calls,#screen5 .script{text-shadow:0 0 1.5cqi #fffaf0,0 0 .8cqi #fffaf0;}
+  #screen5 .s6-love,#screen5 .s6-fam,#screen5 .script,#screen6 .s6-calls{text-shadow:0 0 1.5cqi #fffaf0,0 0 .8cqi #fffaf0;}
 
-  .s6-head{position:absolute;left:0;right:0;top:5.2%;text-align:center;}
-  .s6-title{font-size:9cqi;}
+  .s6-head{position:absolute;left:0;right:0;top:3.6%;text-align:center;}
+  .s6-title{font-size:10cqi;}
 
-  /* family photo – fixed height, width follows the photo (tall or wide), full picture, sharp */
-  .famwrap{position:absolute;left:8%;right:8%;top:11%;text-align:center;}
+  /* ---------- SCREEN 5: big full family photo + names at the bottom ---------- */
+  .famwrap{position:absolute;left:4%;right:4%;top:10.2%;text-align:center;}
   .s6-photo{
     position:relative;overflow:hidden;display:inline-block;vertical-align:top;
     padding:1.2cqi;border-radius:1.8cqi;
     background:linear-gradient(145deg,#f7e3a2,#b07b22 30%,#fff1c0 50%,#a06a18 70%,#f0d58a);
     box-shadow:0 0 0 .6cqi rgba(255,248,225,.85), 0 2.5cqi 6cqi rgba(110,40,30,.25);
   }
-  .s6-photo img{height:48cqi;width:auto;max-width:80cqi;object-fit:contain;border-radius:1cqi;border:.5cqi solid #fff7e0;display:block;}
+  /* whole photo always shows – tall or wide – never cut, never stretched */
+  .s6-photo img{display:block;width:auto;height:auto;max-width:80cqi;max-height:104cqi;border-radius:1cqi;border:.5cqi solid #fff7e0;}
+  /* screen 5: no frame – just the full photo, big, soft rounded corners */
+  .famwrap .s6-photo{padding:0;background:none;border-radius:2.2cqi;box-shadow:0 2.5cqi 6cqi rgba(110,40,30,.35);}
+  .famwrap .s6-photo img{max-width:82cqi;max-height:120cqi;border:0;border-radius:2.2cqi;}
   /* photo appears with a fade only – no blur/scale left on it, so it stays sharp */
   .s6-photo.ln.on.pop{animation:photoIn 1s ease forwards;}
   @keyframes photoIn{from{opacity:0;}to{opacity:1;}}
   .s6-photo::after{content:"";position:absolute;top:0;left:-70%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,245,215,.6),transparent);transform:skewX(-18deg);animation:sweep 4.5s ease-in-out infinite 3s;}
 
-  /* names shown in full – one per line */
-  .s6-names{position:absolute;left:4%;right:4%;top:41.5%;text-align:center;line-height:1.5;}
-  .s6-love{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:3.6cqi;color:var(--text);}
-  .s6-name{font-family:'Cinzel Decorative',serif;font-weight:700;font-size:3.2cqi;letter-spacing:.06em;color:var(--maroon);white-space:nowrap;}
-  .s6-and{font-family:'Great Vibes',cursive;font-size:4.6cqi;line-height:1;color:var(--gold);}
-  .s6-fam{font-family:'Cormorant Garamond',serif;font-style:italic;font-size:3.4cqi;color:var(--text);}
+  .s6-names{position:absolute;left:8%;right:8%;top:78.5%;text-align:center;}
+  .s6-love{font-size:7.4cqi;line-height:1.05;-webkit-text-stroke:.035em currentColor !important;}
+  .s6-host{font-family:'Great Vibes',cursive;font-size:10cqi;line-height:1.05;color:var(--maroon);margin-top:.2cqi;text-wrap:balance;-webkit-text-stroke:.04em currentColor !important;
+    text-shadow:0 0 .2cqi #e9c877, 0 .3cqi .6cqi rgba(160,112,31,.4), 0 0 2cqi #fffaf0;}
 
-  .s6-venue{position:absolute;left:6%;right:6%;top:58%;text-align:center;}
-  .s6-venue .caps{font-size:2.3cqi;color:var(--maroon);}
-  .s6-venue .addr{font-family:'Cormorant Garamond',serif;font-weight:600;font-size:3.2cqi;line-height:1.6;color:var(--text);margin-top:1.6cqi;}
-  .s6-venue .addr b{font-family:'Cinzel',serif;font-weight:700;font-size:3.2cqi;letter-spacing:.06em;color:var(--maroon);}
-  .s6-btns{position:absolute;left:12%;right:12%;top:71.5%;display:flex;flex-direction:column;gap:2.4cqi;}
+  /* ---------- SCREEN 6: our new home + directions + blessing card ---------- */
+  #screen6 .caps,#screen6 .addr,#screen6 .script,#screen6 .s6-calls{text-shadow:0 0 1.5cqi #fffaf0,0 0 .8cqi #fffaf0;}
+  .s7-head{position:absolute;left:0;right:0;top:3.4%;text-align:center;}
+  .s7-title{font-size:10cqi;}
+
+  /* ---------- SCREEN 6 surprise: doors of the new home open ---------- */
+  .surprise{position:absolute;left:25%;right:25%;top:9.2%;text-align:center;}
+  .sp-rays{position:absolute;left:50%;top:46%;width:72cqi;aspect-ratio:1;margin:-36cqi 0 0 -36cqi;border-radius:50%;
+    background:repeating-conic-gradient(rgba(240,190,80,.45) 0 4deg, transparent 4deg 14deg);
+    -webkit-mask:radial-gradient(circle, #000 20%, transparent 70%);mask:radial-gradient(circle, #000 20%, transparent 70%);
+    animation:spinSlow 40s linear infinite;opacity:0;transition:opacity 1.5s ease 2.6s;}
+  #screen6.go .sp-rays{opacity:1;}
+  .sp-home{position:relative;display:block;width:100%;height:auto;filter:drop-shadow(0 1.6cqi 2.4cqi rgba(110,40,30,.3));}
+  .sp-door{transform-box:fill-box;transition:transform 1.8s cubic-bezier(.5,0,.2,1) 1.8s;}
+  .sp-dl{transform-origin:left center;}
+  .sp-dr{transform-origin:right center;}
+  #screen6.go .sp-dl,#screen6.go .sp-dr{transform:scaleX(.12);}
+  .sp-diya path:first-child,.sp-lamp path:first-child{transform-box:fill-box;transform-origin:50% 100%;animation:flicker .8s ease-in-out infinite alternate;}
+  .sp-win{animation:winGlow 2.4s ease-in-out infinite;}
+  @keyframes winGlow{0%,100%{opacity:.75;}50%{opacity:1;}}
+  .sp-kalash{transform-box:fill-box;transform-origin:50% 100%;animation:plantSway 3s ease-in-out infinite;}
+  .sp-feet g{opacity:0;transition:opacity .6s ease;}
+  #screen6.go .sp-f1{opacity:1;transition-delay:3.6s;}
+  #screen6.go .sp-f2{opacity:1;transition-delay:4.2s;}
+  .sp-word{font-family:'Great Vibes',cursive;font-size:7cqi;line-height:1;white-space:nowrap;color:var(--maroon);-webkit-text-stroke:.025em currentColor;
+    margin-top:0;opacity:0;transform:translateY(2cqi);transition:opacity 1s ease 3.4s, transform 1s ease 3.4s;text-shadow:0 0 2cqi #fffaf0;}
+  #screen6.go .sp-word{opacity:1;transform:none;}
+
+  .s6-venue{position:absolute;left:9%;right:9%;top:34.6%;text-align:center;}
+  .s6-venue .caps{font-size:3.4cqi;letter-spacing:.12em;color:var(--maroon);}
+  .s6-venue .addr{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4.6cqi;line-height:1.35;color:#4a1c14;margin-top:1cqi;}
+  .s6-venue .addr b{font-family:'Cinzel',serif;font-weight:700;font-size:4.5cqi;letter-spacing:.03em;color:var(--maroon);}
+  .s6-btns{position:absolute;left:11%;right:11%;top:53.4%;display:flex;flex-direction:column;gap:1.8cqi;}
   .btn-row{display:flex;gap:2cqi;}
-  .btn-row .btn{flex:1;font-size:2.4cqi;letter-spacing:.08em;white-space:nowrap;padding:2.4cqi .8cqi;line-height:1.3;}
+  .btn-row .btn{flex:1;font-size:3cqi;letter-spacing:.03em;white-space:nowrap;padding:2.4cqi .6cqi;line-height:1.3;}
   .btn{
     display:block;text-decoration:none;text-align:center;
     padding:2cqi 2cqi;
@@ -458,23 +1697,70 @@
     animation:sweep 3s ease-in-out infinite 1.5s;
   }
   .btn.light{color:var(--maroon);background:#fffaf2;border-color:rgba(160,112,31,.5);box-shadow:0 1cqi 2.5cqi rgba(110,40,30,.12);}
-  .s6-calls{text-align:center;font-family:'Cinzel',serif;font-size:2.3cqi;letter-spacing:.1em;color:var(--maroon);}
+  .s6-calls{text-align:center;font-family:'Cinzel',serif;font-weight:700;font-size:3.7cqi;letter-spacing:.04em;color:var(--maroon);}
   .s6-calls a{color:var(--maroon);text-decoration:none;border-bottom:1px solid rgba(122,31,43,.35);}
 
-  .brand{position:absolute;left:0;right:0;top:94.5%;text-align:center;}
-  #screen5 .brand small{display:inline;font-size:1.7cqi;} #screen5 .brand b{display:inline;font-size:2.4cqi;margin-left:1.2cqi;letter-spacing:.35em;}
+  .brand{position:absolute;left:0;right:0;top:95.6%;text-align:center;}
+  #screen6 .brand small{display:inline;font-size:2.2cqi;} #screen6 .brand b{display:inline;font-size:3cqi;margin-left:1.2cqi;letter-spacing:.35em;}
   .brand small{display:block;font-family:'Cinzel',serif;font-size:1.9cqi;letter-spacing:.4em;color:var(--gold);}
   .brand b{display:block;font-family:'Cinzel',serif;font-weight:700;font-size:4cqi;letter-spacing:.45em;color:var(--maroon);margin-top:.6cqi;padding-left:.45em;}
 
   /* =====================================================
-     WHATSAPP BLESSINGS BUTTON
+     BLESSING CARD – screen 6, under the address (sends to WhatsApp)
      ===================================================== */
-  .s6-wa{position:absolute;left:12%;right:12%;top:83%;}
-  .btn.wa{font-size:2.5cqi;letter-spacing:.08em;white-space:nowrap;padding:2.6cqi 1cqi;line-height:1.3;color:#fff8e1;
-    background:linear-gradient(135deg,#1f8f5a,#127a48 50%,#0b5c35);border:1px solid var(--gold-light);
-    box-shadow:0 0 0 .6cqi rgba(255,248,225,.8), 0 1.2cqi 3cqi rgba(18,122,72,.35);animation:waGlow 2.4s ease-in-out infinite;}
-  .btn.wa svg{width:3.6cqi;height:3.6cqi;vertical-align:-.9cqi;margin-right:1.4cqi;}
-  @keyframes waGlow{0%,100%{box-shadow:0 0 0 .6cqi rgba(255,248,225,.8),0 1cqi 2.5cqi rgba(18,122,72,.3);}50%{box-shadow:0 0 0 .6cqi rgba(255,248,225,.95),0 0 4cqi rgba(233,200,119,.95);}}
+  .s6-bless{position:absolute;left:11%;right:11%;top:65.2%;padding:.9cqi;background:#fdf6e6;border:1px solid #c49a45;border-radius:1.2cqi;
+    box-shadow:0 1.5cqi 4cqi rgba(74,11,22,.3);}
+  .s6-bless>div{padding:1.4cqi 2.6cqi 2cqi;text-align:center;border:1px solid #c49a45;border-radius:.8cqi;
+    background:radial-gradient(ellipse at 50% 0%,#8f2236,#5a0d1b 75%);color:#fbefd8;}
+  .s6-bless .bk{font-family:'Great Vibes',cursive;font-size:8cqi;line-height:1.1;color:#f3d991;-webkit-text-stroke:.02em currentColor;}
+  .s6-bless input{display:block;width:100%;margin-top:1.4cqi;padding:1.2cqi 2cqi;border:1px solid #c49a45;background:#fffdf8;border-radius:.8cqi;
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:max(4cqi,16px);line-height:1.15;color:#4a1c14;user-select:text;-webkit-user-select:text;outline:none;}
+  .s6-bless input::placeholder{color:#8a6a5a;font-weight:600;}
+  .s6-bless .yn{display:grid;grid-template-columns:1fr 1fr;gap:1.4cqi;margin-top:1.4cqi;}
+  .s6-bless .yn button{padding:1.3cqi .4cqi;border:1px solid #c49a45;border-radius:.8cqi;background:rgba(255,255,255,.1);color:#fbefd8;
+    font-family:'Cormorant Garamond',serif;font-weight:700;font-size:3.8cqi;line-height:1.1;cursor:pointer;}
+  .s6-bless .yn button.on{background:linear-gradient(180deg,#f3d991,#c49a45);color:#5a0d1b;}
+  .s6-bless .gbtn{display:flex;align-items:center;justify-content:center;gap:1.6cqi;width:100%;margin-top:1.6cqi;padding:1.8cqi 1cqi;border:0;border-radius:.9cqi;
+    background:linear-gradient(180deg,#f3d991,#c49a45);color:#5a0d1b;font-family:'Cinzel',serif;font-weight:700;font-size:3.4cqi;letter-spacing:.1em;cursor:pointer;
+    box-shadow:0 .6cqi 0 #8a6420,0 1.6cqi 3cqi rgba(0,0,0,.25);}
+  .s6-bless .gbtn:active{transform:translateY(.5cqi);box-shadow:0 .1cqi 0 #8a6420;}
+  .s6-bless .note{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:3.6cqi;margin-top:1.2cqi;color:#f4dcc4;}
+  .s6-bless .note:empty{display:none;}
+
+  /* =====================================================
+     LOCATION BUTTON (top left, on every screen) + POPUP
+     ===================================================== */
+  .loc-btn{
+    position:absolute;z-index:70;
+    top:calc(env(safe-area-inset-top, 0px) + 22px);left:12px;
+    width:34px;height:34px;border-radius:50%;
+    border:1.2px solid var(--gold-light);
+    background:linear-gradient(135deg,#962f3b,var(--maroon) 55%,#5a1420);
+    font-size:16px;line-height:32px;text-align:center;cursor:pointer;
+    box-shadow:0 0 0 3px rgba(255,248,225,.75);
+    animation:locPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes locPulse{0%,100%{box-shadow:0 0 0 3px rgba(255,248,225,.75),0 0 0 0 rgba(233,180,70,.7);}50%{box-shadow:0 0 0 3px rgba(255,248,225,.75),0 0 0 9px rgba(233,180,70,0);}}
+
+  .loc-pop{position:absolute;inset:0;z-index:90;display:flex;align-items:center;justify-content:center;padding:0 22px;
+    background:rgba(40,15,10,.55);opacity:0;visibility:hidden;transition:opacity .4s ease, visibility .4s ease;}
+  .loc-pop.show{opacity:1;visibility:visible;}
+  .loc-card{position:relative;width:100%;max-width:360px;text-align:center;padding:30px 20px 22px;border-radius:18px;
+    background:linear-gradient(180deg,#fffaf0,#f8ecd2);border:1.5px solid #c9a24e;
+    box-shadow:inset 0 0 0 6px #fffaf0, inset 0 0 0 7.5px rgba(201,162,78,.7), 0 18px 40px rgba(0,0,0,.35);
+    transform:scale(.85) translateY(20px);transition:transform .45s cubic-bezier(.2,.9,.3,1.2);}
+  .loc-pop.show .loc-card{transform:scale(1) translateY(0);}
+  .loc-pin{width:54px;height:54px;margin:-58px auto 6px;border-radius:50%;font-size:26px;line-height:52px;
+    background:linear-gradient(140deg,#962f3b,#7a1f2b 55%,#5a1420);border:1.5px solid #e9c877;
+    box-shadow:0 0 0 5px #fffaf0,0 0 18px rgba(233,180,70,.8);}
+  .loc-title{font-family:'Great Vibes',cursive;font-size:36px;line-height:1.2;color:var(--maroon);}
+  .loc-addr{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:20px;line-height:1.45;color:var(--text);margin-top:8px;}
+  .loc-addr b{font-family:'Cinzel',serif;font-weight:700;font-size:19px;color:var(--maroon);}
+  .loc-date{font-family:'Cinzel',serif;font-weight:700;font-size:15px;color:var(--gold);margin-top:10px;letter-spacing:.04em;}
+  .loc-card .btn{font-size:16px;letter-spacing:.08em;padding:13px 10px;margin-top:16px;}
+  .loc-call{display:block;margin-top:12px;font-family:'Cinzel',serif;font-weight:700;font-size:16px;color:var(--maroon);text-decoration:none;}
+  .loc-close{position:absolute;top:10px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(160,112,31,.5);
+    background:#fffaf2;color:var(--maroon);font-size:18px;line-height:30px;cursor:pointer;}
 </style>
 </head>
 <body>
@@ -508,7 +1794,7 @@
         <p class="script s1-welcome ln write">Welcome to the World of</p>
         <p class="s1-names ln write" id="s1Names"></p>
         <div class="orn ln fade"></div>
-        <p class="italic s1-invite ln fade">cordially invite you &amp; your family to our</p>
+        <p class="s1-invite ln fade">cordially invite you<br>&amp; your family to our</p>
         <p class="caps s1-event ln letters" id="s1Event"></p>
       </div>
     </section>
@@ -542,7 +1828,7 @@
         <p class="caps s2-sur ln letters" id="s2Sur2"></p>
         <p class="s2-cpl ln write" id="s2Cpl2"></p>
       </div>
-      <div class="s2-bless ln fade"><p>Their love &amp; blessings light up<br>our new beginning</p></div>
+      <div class="s2-bless ln fade"><p class="vibe">Their love &amp; blessings<br>light up our new beginning</p></div>
     </section>
 
     <!-- ============ SCREEN 3 : PLEASE JOIN US ============ -->
@@ -568,7 +1854,7 @@
       </div>
       <div class="s3-text">
         <p class="s3-please ln letters">Please Join Us</p>
-        <p class="italic s3-for ln fade">for the auspicious</p>
+        <p class="italic vibe s3-for ln fade">for the auspicious</p>
         <div><p class="s3-title gold ln write" id="s3Title"></p></div>
         <p class="caps s3-hw ln letters">HOUSE WARMING CEREMONY</p>
         <div class="orn ln fade"></div>
@@ -600,18 +1886,82 @@
       </div>
     </section>
 
-    <!-- ============ SCREEN 5 : SEE YOU AT HOME ============ -->
+    <!-- ============ SCREEN 5 : SEE YOU AT HOME (big full photo + names at bottom) ============ -->
     <section class="screen" id="screen5">
       <div class="s5art"><img src="screen5_moving_files/inv4s5_bg.jpg" alt=""></div>
       <div class="s5glow"></div>
       <div class="s6-head"><p class="script s6-title ln write">See you at home</p></div>
       <div class="famwrap"><div class="s6-photo ln pop"><img src="invitation4%20image5.jpeg" alt="Family"></div></div>
       <div class="s6-names">
-        <p class="s6-love ln fade">With love,</p>
-        <p class="s6-name ln letters" id="s6Name1"></p>
-        <p class="s6-and ln fade">&amp;</p>
-        <p class="s6-name ln letters" id="s6Name2"></p>
-        <p class="s6-fam ln fade">&amp; family</p>
+        <p class="vibe s6-love ln fade">With love,</p>
+        <p class="s6-host ln fade" id="s6Host"></p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN 6 : OUR NEW HOME + BLESSINGS ============ -->
+    <section class="screen" id="screen6">
+      <div class="s5art"><img src="screen5_moving_files/inv4s5_bg.jpg" alt=""></div>
+      <div class="s5glow"></div>
+      <div class="s7-head"><p class="script s7-title ln write">Our New Home</p></div>
+      <!-- surprise: new home doors open, light & Lakshmi footsteps -->
+      <div class="surprise ln pop">
+        <div class="sp-rays"></div>
+        <svg class="sp-home" viewBox="0 0 200 140">
+          <defs>
+            <linearGradient id="spGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7e3a2"/><stop offset=".5" stop-color="#b07b22"/><stop offset="1" stop-color="#f0d58a"/></linearGradient>
+            <linearGradient id="spRoof" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9a2b3a"/><stop offset="1" stop-color="#5a1420"/></linearGradient>
+            <linearGradient id="spDoor" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#8f2236"/><stop offset="1" stop-color="#5a0d1b"/></linearGradient>
+            <radialGradient id="spLight" cx=".5" cy=".75" r=".75"><stop offset="0" stop-color="#fff7d0"/><stop offset=".45" stop-color="#ffd76a"/><stop offset="1" stop-color="#f0a23a"/></radialGradient>
+          </defs>
+          <!-- kalasam on the roof -->
+          <g class="sp-kalash">
+            <path d="M93 16 Q100 4 107 16" fill="#3f8f3a"/>
+            <circle cx="100" cy="13" r="4.2" fill="#e8a33a"/>
+            <path d="M93 18 h14 l-2 4 h-10 z" fill="url(#spGold)"/>
+            <ellipse cx="100" cy="27" rx="7" ry="6" fill="url(#spGold)"/>
+          </g>
+          <!-- roof -->
+          <polygon points="36,56 100,24 164,56" fill="url(#spRoof)" stroke="url(#spGold)" stroke-width="2.4" stroke-linejoin="round"/>
+          <!-- house -->
+          <rect x="48" y="56" width="104" height="66" fill="#fff8e6" stroke="url(#spGold)" stroke-width="2.2"/>
+          <!-- toran (mango leaves + marigold) -->
+          <g class="sp-toran">
+            <path d="M52 59 Q100 70 148 59" fill="none" stroke="#e8a33a" stroke-width="1.6"/>
+            <g fill="#3f8f3a">
+              <ellipse cx="58" cy="64" rx="2.2" ry="4.4"/><ellipse cx="68" cy="66.5" rx="2.2" ry="4.4"/><ellipse cx="78" cy="68" rx="2.2" ry="4.4"/>
+              <ellipse cx="88" cy="69" rx="2.2" ry="4.4"/><ellipse cx="100" cy="69.5" rx="2.2" ry="4.4"/><ellipse cx="112" cy="69" rx="2.2" ry="4.4"/>
+              <ellipse cx="122" cy="68" rx="2.2" ry="4.4"/><ellipse cx="132" cy="66.5" rx="2.2" ry="4.4"/><ellipse cx="142" cy="64" rx="2.2" ry="4.4"/>
+            </g>
+            <g fill="#f58a07">
+              <circle cx="63" cy="62.5" r="2"/><circle cx="73" cy="64.6" r="2"/><circle cx="83" cy="65.8" r="2"/><circle cx="94" cy="66.4" r="2"/>
+              <circle cx="106" cy="66.4" r="2"/><circle cx="117" cy="65.8" r="2"/><circle cx="127" cy="64.6" r="2"/><circle cx="137" cy="62.5" r="2"/>
+            </g>
+          </g>
+          <!-- windows -->
+          <rect class="sp-win" x="58" y="80" width="16" height="20" rx="8" ry="8" fill="url(#spLight)" stroke="url(#spGold)" stroke-width="1.6"/>
+          <rect class="sp-win" x="126" y="80" width="16" height="20" rx="8" ry="8" fill="url(#spLight)" stroke="url(#spGold)" stroke-width="1.6"/>
+          <!-- light inside the door + diya -->
+          <rect x="82" y="76" width="36" height="46" fill="url(#spLight)"/>
+          <g class="sp-diya">
+            <path d="M100 98 C104 103 103 108 100 110 C97 108 96 103 100 98 Z" fill="#ff9d1c"/>
+            <path d="M100 102 C101.5 104.5 101.5 107 100 108.3 C98.5 107 98.5 104.5 100 102 Z" fill="#fff4b8"/>
+            <path d="M91 111 Q100 120 109 111 Z" fill="url(#spGold)"/>
+          </g>
+          <!-- doors that open -->
+          <g class="sp-door sp-dl"><rect x="82" y="76" width="18" height="46" fill="url(#spDoor)" stroke="url(#spGold)" stroke-width="1.4"/><rect x="85" y="80" width="12" height="16" fill="none" stroke="#e9c877" stroke-width=".8"/><rect x="85" y="100" width="12" height="18" fill="none" stroke="#e9c877" stroke-width=".8"/><circle cx="97" cy="99" r="1.3" fill="#f3d58a"/></g>
+          <g class="sp-door sp-dr"><rect x="100" y="76" width="18" height="46" fill="url(#spDoor)" stroke="url(#spGold)" stroke-width="1.4"/><rect x="103" y="80" width="12" height="16" fill="none" stroke="#e9c877" stroke-width=".8"/><rect x="103" y="100" width="12" height="18" fill="none" stroke="#e9c877" stroke-width=".8"/><circle cx="103" cy="99" r="1.3" fill="#f3d58a"/></g>
+          <!-- step -->
+          <rect x="70" y="122" width="60" height="5" rx="1.5" fill="url(#spGold)"/>
+          <!-- Lakshmi footsteps walking in -->
+          <g class="sp-feet" fill="#c0262d">
+            <g class="sp-f1"><ellipse cx="92" cy="135" rx="2.6" ry="3.6"/><circle cx="90.6" cy="130.4" r=".8"/><circle cx="92.2" cy="130" r=".8"/><circle cx="93.7" cy="130.5" r=".8"/></g>
+            <g class="sp-f2"><ellipse cx="108" cy="132" rx="2.6" ry="3.6"/><circle cx="106.3" cy="127.5" r=".8"/><circle cx="107.8" cy="127" r=".8"/><circle cx="109.4" cy="127.4" r=".8"/></g>
+          </g>
+          <!-- side diyas -->
+          <g class="sp-lamp"><path d="M58 118 C60.5 121 60 124 58 125 C56 124 55.5 121 58 118 Z" fill="#ff9d1c"/><path d="M52 125 Q58 131 64 125 Z" fill="url(#spGold)"/></g>
+          <g class="sp-lamp"><path d="M142 118 C144.5 121 144 124 142 125 C140 124 139.5 121 142 118 Z" fill="#ff9d1c"/><path d="M136 125 Q142 131 148 125 Z" fill="url(#spGold)"/></g>
+        </svg>
+        <p class="sp-word">Welcome Home</p>
       </div>
       <div class="s6-venue">
         <p class="caps ln letters">AT OUR NEW HOME</p>
@@ -624,8 +1974,17 @@
         </div>
         <p class="s6-calls ln fade" id="s6Calls"></p>
       </div>
-      <!-- one WhatsApp button for blessings -->
-      <div class="s6-wa ln fade"><a class="btn wa" id="btnWa" target="_blank" rel="noopener"><svg viewBox="0 0 32 32"><path fill="#fff" d="M16 3a13 13 0 0 0-11.2 19.6L3 29l6.6-1.7A13 13 0 1 0 16 3zm0 23.6a10.6 10.6 0 0 1-5.4-1.5l-.4-.2-3.9 1 1-3.8-.3-.4A10.6 10.6 0 1 1 16 26.6zm5.8-7.9c-.3-.2-1.9-.9-2.2-1s-.5-.2-.7.2-.8 1-1 1.2-.4.2-.7.1a8.7 8.7 0 0 1-4.3-3.8c-.3-.6.3-.5.9-1.7.1-.2 0-.4 0-.5l-1-2.4c-.3-.6-.5-.5-.7-.5h-.6a1.2 1.2 0 0 0-.9.4 3.7 3.7 0 0 0-1.1 2.7 6.4 6.4 0 0 0 1.3 3.4 14.6 14.6 0 0 0 5.6 5c2.1.9 2.9.9 3.9.8a3.3 3.3 0 0 0 2.2-1.5 2.7 2.7 0 0 0 .2-1.5c-.1-.2-.3-.3-.6-.5z"/></svg>SEND BLESSINGS ON WHATSAPP</a></div>
+      <!-- blessing card – under the address, sends to WhatsApp -->
+      <div class="s6-bless ln fade">
+        <div>
+          <p class="bk">Bless our new home</p>
+          <input id="bName" placeholder="Your name (e.g. Kumar &amp; family)">
+          <div class="yn"><button data-v="Yes, we'll be there 🙏">Happily attending</button><button data-v="Sorry, we can't make it">Unable to attend</button></div>
+          <input id="bMsg" placeholder="Your blessing (optional)">
+          <button class="gbtn" id="bSend">&#128591; SEND BLESSINGS</button>
+          <p class="note" id="bNote"></p>
+        </div>
+      </div>
       <div class="brand ln fade"><small>CRAFTED WITH LOVE BY</small><b>UNSAID</b></div>
     </section>
 
@@ -633,6 +1992,20 @@
   </div>
 
   <div class="music-btn off" id="musicBtn">&#9835;</div>
+
+  <!-- location button on every screen -->
+  <div class="loc-btn" id="locBtn">&#128205;</div>
+  <div class="loc-pop" id="locPop">
+    <div class="loc-card">
+      <div class="loc-close" id="locClose">&#10005;</div>
+      <div class="loc-pin">&#128205;</div>
+      <p class="loc-title">Our New Home</p>
+      <p class="loc-addr" id="locAddr"></p>
+      <p class="loc-date" id="locDate"></p>
+      <a class="btn" id="locMap" target="_blank" rel="noopener">&#128205; OPEN GOOGLE MAPS</a>
+      <a class="loc-call" id="locCall"></a>
+    </div>
+  </div>
 </div>
 
 <audio id="bgMusic" loop preload="auto"></audio>
@@ -645,23 +2018,23 @@
     title:     "Gruhapravesam",
     welcome:   "Ganesh & Bhargavi",          // names on the first screen
     eventName: "House Warming Ceremony",     // line under the names on the first screen
-    hosts:     ["Balamoni Ganesh", "Balamoni Bhargavi"],
+    hostLine:  "Balamoni Bhargavi Ganesh Goud",   // "With love" names on screen 5
     elders:    [ { surname: "Balamoni", names: "Krishnaiah & Jangamma" },
                  { surname: "Palle",    names: "Yadaiah & Shoba" } ],
     date:      "2026-12-03",          // YYYY-MM-DD
     muhurtham: "6:30 AM",
     rituals: [                        // cards go white, maroon, white, maroon...   main: true = shows MUHURTHAM
       { icon: "🏺", time: "6:30 AM",  name: "Gruhapravesam",         sub: "First step in with the kalasam", main: true },
-      { icon: "🪔", time: "7:00 AM",  name: "Vastu Pooja",           sub: "Blessings for the new home" },
-      { icon: "🔥", time: "7:30 AM",  name: "Homam",                 sub: "Sacred fire for peace" },
-      { icon: "🌼", time: "9:00 AM",  name: "Kalyanam",              sub: "Divine wedding ritual" },
-      { icon: "🪷", time: "10:30 AM", name: "Satyanarayana Vratham", sub: "Pooja & prasadam" },
+      { icon: "🪔", time: "8:00 AM",  name: "Vastu Pooja",           sub: "Blessings for the new home" },
+      { icon: "🔥", time: "9:00 AM",  name: "Homam",                 sub: "Sacred fire for peace" },
+      { icon: "🌼", time: "10:30 AM", name: "Kalyanam",              sub: "Divine wedding ritual" },
+      { icon: "🪷", time: "11:30 AM", name: "Satyanarayana Vratham", sub: "Pooja & prasadam" },
       { icon: "🍛", time: "1:00 PM",  name: "Lunch",                 sub: "Bhojanam with family & friends" }
     ],
-    address:   "<b>Balamoni Bhargavi Nilayam</b><br>13-131/1, Annapurna Colony, Kanchanbagh<br>Hyderabad, Telangana",
-    mapLink:   "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Balamoni Bhargavi nilayam, 13-131/1, Annapurna Colony, Kanchanbagh, Hyderabad"),
+    address:   "<b>Balamoni Bhargavi Nilayam</b><br>13-131/1, Sai Nagar Colony<br>Edhamma Temple Road, Balapur<br>Hyderabad, Telangana",
+    mapLink:   "https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent("Balamoni Bhargavi Nilayam, 13-131/1, Sai Nagar Colony, Edhamma Temple Road, Balapur, Hyderabad, Telangana"),
     whatsapp:  "919640552020",        // blessings come to this WhatsApp number (91 + number)
-    blessMsg:  "Heartfelt congratulations on your Gruhapravesam! Wishing your family health, happiness and prosperity in your new home. 🏡✨",
+    blessMsg:  "Heartfelt congratulations on your Gruhapravesam! Wishing your family health, happiness and prosperity in your new home. 🏡✨",  // used when guest writes nothing
     phones:    ["9640552020", "9705301222"],
     music:     "invitation4.mpeg"     // song file
   };
@@ -737,16 +2110,15 @@
       '<div class="diya ln pop">' + diyaSVG + '</div>' +
       '<div class="tcard ' + (i % 2 === 1 ? "main " : "") + 'ln ' + (side === "left" ? "fromL" : "fromR") + '">' +
         '<p class="tm">' + (side === "right" ? '<span class="ic">' + (r.icon || "") + '</span>' : "") +
-          (r.main ? "MUHURTHAM · " : "") + r.time +
+          r.time +
           (side === "left" ? '<span class="ic">' + (r.icon || "") + '</span>' : "") + '</p>' +
-        '<p class="nm">' + r.name + '</p>' +
+        (r.main ? '<p class="mu">MUHURTHAM</p>' : '') + '<p class="nm">' + r.name + '</p>' +
         (r.sub ? '<p class="sb">' + r.sub + '</p>' : '') +
       '</div></div>';
   }).join("");
 
-  /* ---------- Screen 5: names, address, directions, phones ---------- */
-  $("s6Name1").textContent = ORDER.hosts[0];
-  $("s6Name2").textContent = ORDER.hosts[1];
+  /* ---------- Screen 5 & 6: names, address, directions, phones ---------- */
+  $("s6Host").textContent = ORDER.hostLine;
   $("s6Addr").innerHTML = ORDER.address;
   const plainAddr = ORDER.address.replace(/<br\s*\/?>/gi, ", ").replace(/<[^>]+>/g, "");
   $("btnMap").href = ORDER.mapLink || ("https://www.google.com/maps/search/?api=1&query=" + encodeURIComponent(plainAddr));
@@ -817,7 +2189,7 @@
      ===================================================== */
   const screens = [...document.querySelectorAll(".screen")];
   const N = screens.length;
-  let autoTimer, s1Started = false;
+  let autoTimer, s1Started = false, cur = 1;
 
   function goToScreen(n){
     const next = $("screen" + n);
@@ -825,6 +2197,7 @@
     s1Started = true;
     screens.forEach(s => s.classList.remove("active"));
     next.classList.add("active");
+    cur = n;
     const total = playLines(next, 1.0);
     clearTimeout(autoTimer);
     if(n !== N) autoTimer = setTimeout(() => goToScreen(n + 1), (total + PACE.hold) * 1000);
@@ -870,9 +2243,39 @@
   $("btnAgain").addEventListener("click", () => goToScreen(1));
 
   /* =====================================================
-     WHATSAPP BLESSINGS BUTTON
+     LOCATION POPUP – opens from the 📍 button on any screen
+     (the video waits while it is open, then carries on)
      ===================================================== */
-  $("btnWa").href = "https://wa.me/" + ORDER.whatsapp + "?text=" + encodeURIComponent("🏡 Gruhapravesam Blessings 🙏\n\n" + ORDER.blessMsg);
+  $("locAddr").innerHTML = ORDER.address;
+  $("locDate").innerHTML = weekName + " · " + day + "<sup>" + sfx + "</sup> " + monthName + " · " + ORDER.muhurtham;
+  $("locMap").href = $("btnMap").href;
+  $("locCall").innerHTML = "&#9742; " + ORDER.phones[0];
+  $("locCall").href = "tel:" + ORDER.phones[0];
+  function openLoc(){ clearTimeout(autoTimer); $("locPop").classList.add("show"); }
+  function closeLoc(){
+    $("locPop").classList.remove("show");
+    clearTimeout(autoTimer);
+    if(cur !== N) autoTimer = setTimeout(() => goToScreen(cur + 1), 3000);
+  }
+  $("locBtn").addEventListener("click", e => { e.stopPropagation(); openLoc(); });
+  $("locClose").addEventListener("click", closeLoc);
+  $("locPop").addEventListener("click", e => { if(e.target === $("locPop")) closeLoc(); });
+
+  /* =====================================================
+     BLESSING CARD → opens WhatsApp with the guest's blessing
+     ===================================================== */
+  let bAns = "";
+  document.querySelectorAll(".s6-bless .yn button").forEach(b => b.addEventListener("click", () => {
+    bAns = b.dataset.v;
+    document.querySelectorAll(".s6-bless .yn button").forEach(x => x.classList.toggle("on", x === b));
+  }));
+  $("bSend").addEventListener("click", () => {
+    const n = $("bName").value.trim(), m = $("bMsg").value.trim(), note = $("bNote");
+    if(!n || !bAns){ note.textContent = "Please enter your name and pick an option."; return; }
+    note.textContent = "Thank you for your blessings! 💛";
+    const text = "🏡 Gruhapravesam Blessings 🙏\nName: " + n + "\n" + bAns + "\n\n" + (m || ORDER.blessMsg);
+    window.open("https://wa.me/" + ORDER.whatsapp + "?text=" + encodeURIComponent(text), "_blank");
+  });
 
   /* =====================================================
      MUSIC – starts on first touch anywhere, button to stop
