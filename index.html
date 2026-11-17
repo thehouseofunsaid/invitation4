@@ -501,6 +501,13 @@
     box-shadow:0 0 0 .5cqi rgba(255,248,225,.9),0 1.6cqi 4cqi rgba(110,40,30,.35);transition:opacity .8s ease;animation:scratchPulse 2s ease-in-out infinite;}
   @keyframes scratchPulse{0%,100%{box-shadow:0 0 0 .5cqi rgba(255,248,225,.9),0 1.6cqi 4cqi rgba(110,40,30,.35);}50%{box-shadow:0 0 0 .5cqi rgba(255,248,225,.9),0 0 5cqi rgba(233,180,70,.95);}}
   .surprise.revealed .scratch{opacity:0;pointer-events:none;animation:none;}
+  /* words on the gold card (real text, so Telugu & English always sit in the centre) – fade away when scratching starts */
+  .sc-label{position:absolute;left:-4%;top:-2%;width:108%;height:104%;z-index:4;pointer-events:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.6cqi;
+    text-align:center;color:#7a1f2b;transition:opacity .4s ease;}
+  .sc-label b{font-family:'Cinzel',serif;font-weight:700;font-size:3.9cqi;letter-spacing:.06em;white-space:nowrap;}
+  .sc-label i{font-family:'Great Vibes',cursive;font-style:normal;font-size:5.6cqi;line-height:1.1;white-space:nowrap;}
+  .sc-label span{font-size:6cqi;line-height:1;}
+  .surprise.touched .sc-label,.surprise.revealed .sc-label{opacity:0;}
 
   .s6-venue{position:absolute;left:9%;right:9%;top:36%;text-align:center;}
   .s6-venue .caps{font-size:3.4cqi;letter-spacing:.12em;color:var(--maroon);}
@@ -637,6 +644,8 @@
   body.te .s6-bless .bk{font-size:5.8cqi;font-weight:700;line-height:1.4;}
   body.te .s6-bless .yn button{font-size:3.4cqi;}
   body.te .s6-bless .gbtn{font-size:3.6cqi;}
+  body.te .sc-label b{font-size:4cqi;}
+  body.te .sc-label i{font-size:3.7cqi;font-weight:700;}
   body.te .loc-title{font-size:28px;font-weight:700;}
   body.te .loc-addr{font-size:18px;}
   body.te .loc-addr b{font-size:18px;}
@@ -845,6 +854,7 @@
         </svg>
         <p class="sp-word" data-k="word"></p>
         <canvas class="scratch" id="scratch"></canvas>
+        <div class="sc-label"><b data-k="sc1"></b><i data-k="sc2"></i><span>&#128070;</span></div>
       </div>
       <div class="s6-venue">
         <p class="caps ln letters" data-k="atHome"></p>
@@ -1216,7 +1226,6 @@
     sp[0].classList.toggle("on", l === "en"); sp[1].classList.toggle("on", l === "te");
     fill();
     goToScreen(cur);                         // replay the current screen in the new language
-    if(l === "te" && document.fonts) document.fonts.load("700 20px 'Noto Serif Telugu'").then(() => { if(cur === N && !scTouched && !scDone) initScratch(); });
   }
   $("langBtn").addEventListener("click", e => { e.stopPropagation(); setLang(LANG === "en" ? "te" : "en"); });
   fill();
@@ -1227,7 +1236,7 @@
   const sc = $("scratch"), sctx = sc.getContext("2d", { willReadFrequently: true });
   let scDone = false, scDown = false, scMoves = 0, scTouched = false;
   function initScratch(){
-    scDone = false; scTouched = false; scMoves = 0; $("surprise").classList.remove("revealed");
+    scDone = false; scTouched = false; scMoves = 0; $("surprise").classList.remove("revealed", "touched");
     const w = sc.offsetWidth, h = sc.offsetHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
     if(!w || !h) return;
     sc.width = w * dpr; sc.height = h * dpr;
@@ -1242,20 +1251,10 @@
     }
     sctx.strokeStyle = "rgba(122,31,43,.55)"; sctx.lineWidth = 1.5; sctx.setLineDash([5, 4]);
     sctx.strokeRect(8, 8, w - 16, h - 16); sctx.setLineDash([]);
-    sctx.textAlign = "center"; sctx.fillStyle = "#7a1f2b";
-    sctx.font = "700 " + Math.round(w * .085) + "px Cinzel, serif";
-    const t = TXT(), te = LANG === "te";
-    if(te) sctx.font = "700 " + Math.round(w * .09) + "px 'Noto Serif Telugu', serif";
-    sctx.fillText(t.sc1, w / 2, h * .36);
-    let fs = w * .13;                      // shrink the line until it fits inside the card
-    do { sctx.font = (te ? "700 " : "") + Math.round(te ? fs * .75 : fs) + "px " + (te ? "'Noto Serif Telugu', serif" : "'Great Vibes', cursive"); fs -= 1; } while(sctx.measureText(t.sc2).width > w * .84 && fs > 8);
-    sctx.fillText(t.sc2, w / 2, h * .58);
-    sctx.font = Math.round(w * .13) + "px serif";
-    sctx.fillText("👆", w / 2, h * .84);
   }
   function scratchAt(e){
     if(scDone) return;
-    scTouched = true;
+    if(!scTouched){ scTouched = true; $("surprise").classList.add("touched"); }
     const r = sc.getBoundingClientRect();
     const x = (e.clientX - r.left) * (sc.offsetWidth / r.width), y = (e.clientY - r.top) * (sc.offsetHeight / r.height);
     sctx.globalCompositeOperation = "destination-out";
@@ -1270,8 +1269,6 @@
     if(clear / total > .35 || scMoves > 140){ reveal(); }   // opens after about a third is scratched
   }
   function reveal(){ if(scDone) return; scDone = true; $("surprise").classList.add("revealed"); }
-  // if the Telugu font arrives after the card was drawn, redraw it (only if not scratched yet)
-  if(document.fonts) document.fonts.ready.then(() => { if(cur === N && !scTouched && !scDone) initScratch(); });
   sc.addEventListener("pointerdown", e => { scDown = true; sc.setPointerCapture(e.pointerId); scratchAt(e); });
   sc.addEventListener("pointermove", e => { if(scDown) scratchAt(e); });
   sc.addEventListener("pointerup",   () => { scDown = false; checkScratch(); });
