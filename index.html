@@ -68,7 +68,7 @@
   .script{font-family:'Great Vibes',cursive;color:var(--maroon);line-height:1.2;}
   .serif {font-family:'Cormorant Garamond',serif;font-weight:600;color:var(--text);line-height:1.35;}
   .italic{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:500;color:var(--gold);}
-  .caps {font-family:'Cinzel Decorative',serif;font-weight:700;letter-spacing:.22em;color:var(--gold);}
+  .caps  {font-family:'Cinzel Decorative',serif;font-weight:700;letter-spacing:.22em;color:var(--gold);}
 
   /* every cursive line = same bold look as "Ganesh & Bhargavi" */
   .script,.s1-names,.vibe{-webkit-text-stroke:.022em currentColor;paint-order:stroke fill;}
@@ -117,19 +117,19 @@
   .ln.letters .ch{opacity:0;display:inline-block;white-space:pre;}
   .ln.on.letters .ch{animation:chIn .55s ease forwards;}
   @keyframes chIn{
-    0% {opacity:0;filter:blur(4px);transform:translateY(.6cqi);}
+    0%  {opacity:0;filter:blur(4px);transform:translateY(.6cqi);}
     100%{opacity:1;filter:blur(0);transform:translateY(0);}
   }
 
   .ln.on.fade{animation:fadeUp .9s ease forwards;}
   @keyframes fadeUp{
-    0% {opacity:0;filter:blur(6px);transform:translateY(2cqi);}
+    0%  {opacity:0;filter:blur(6px);transform:translateY(2cqi);}
     100%{opacity:1;filter:blur(0);transform:translateY(0);}
   }
 
   .ln.on.pop{animation:pop 1.2s cubic-bezier(.2,.9,.3,1.2) forwards;}
   @keyframes pop{
-    0% {opacity:0;transform:scale(.7);filter:blur(8px);}
+    0%  {opacity:0;transform:scale(.7);filter:blur(8px);}
     100%{opacity:1;transform:scale(1);filter:blur(0);}
   }
 
@@ -137,11 +137,11 @@
   .ln.on.fromL{animation:flyL 1s cubic-bezier(.2,.8,.25,1.1) forwards;}
   .ln.on.fromR{animation:flyR 1s cubic-bezier(.2,.8,.25,1.1) forwards;}
   @keyframes flyL{
-    0% {opacity:0;transform:translate(-60cqi,8cqi) rotate(-14deg) scale(.7);}
+    0%  {opacity:0;transform:translate(-60cqi,8cqi) rotate(-14deg) scale(.7);}
     100%{opacity:1;transform:translate(0,0) rotate(0) scale(1);}
   }
   @keyframes flyR{
-    0% {opacity:0;transform:translate(60cqi,8cqi) rotate(14deg) scale(.7);}
+    0%  {opacity:0;transform:translate(60cqi,8cqi) rotate(14deg) scale(.7);}
     100%{opacity:1;transform:translate(0,0) rotate(0) scale(1);}
   }
 
@@ -160,11 +160,21 @@
   /* backgrounds stay still (no zoom) so every screen looks steady */
 
   /* =====================================================
-     MUSIC BUTTON (top right)
+     LANGUAGE SWITCH (EN / తె) – right edge, on top
+     ===================================================== */
+  .lang-btn{position:absolute;z-index:70;top:calc(env(safe-area-inset-top, 0px) + 22px);right:12px;width:34px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px;
+    border-radius:18px;border:1.2px solid var(--gold);background:rgba(255,250,240,.9);box-shadow:0 0 0 3px rgba(255,248,225,.5);cursor:pointer;}
+  .lang-btn span{width:28px;height:26px;line-height:26px;padding:0;border-radius:14px;text-align:center;
+    font-family:'Cinzel',serif;font-weight:700;font-size:12px;color:var(--maroon);transition:background .3s ease,color .3s ease;}
+  .lang-btn span.tel{font-family:'Noto Serif Telugu',serif;font-size:14px;line-height:25px;}
+  .lang-btn span.on{background:linear-gradient(135deg,#962f3b,#7a1f2b 55%,#5a1420);color:#fff3c4;}
+
+  /* =====================================================
+     MUSIC BUTTON (right edge, under the language switch)
      ===================================================== */
   .music-btn{
     position:absolute;z-index:70;
-    top:calc(env(safe-area-inset-top, 0px) + 22px);right:12px;
+    top:calc(env(safe-area-inset-top, 0px) + 90px);right:12px;
     width:34px;height:34px;border-radius:50%;
     border:1.2px solid var(--gold);
     background:rgba(255,250,240,.75);
@@ -178,19 +188,9 @@
   }
 
   /* =====================================================
-     LANGUAGE SWITCH (EN / తె) – top right, next to music
-     ===================================================== */
-  .lang-btn{position:absolute;z-index:70;top:calc(env(safe-area-inset-top, 0px) + 22px);right:54px;height:34px;display:flex;align-items:center;gap:2px;padding:2px;
-    border-radius:20px;border:1.2px solid var(--gold);background:rgba(255,250,240,.9);box-shadow:0 0 0 3px rgba(255,248,225,.5);cursor:pointer;}
-  .lang-btn span{min-width:30px;height:28px;line-height:28px;padding:0 6px;border-radius:16px;text-align:center;
-    font-family:'Cinzel',serif;font-weight:700;font-size:12px;color:var(--maroon);transition:background .3s ease,color .3s ease;}
-  .lang-btn span.tel{font-family:'Noto Serif Telugu',serif;font-size:14px;line-height:27px;}
-  .lang-btn span.on{background:linear-gradient(135deg,#962f3b,#7a1f2b 55%,#5a1420);color:#fff3c4;}
-
-  /* =====================================================
      SCREEN 1 – GANESHA (moving flowers + banana leaves)
      ===================================================== */
-  .s1-text{position:absolute;left:8%;right:8%;top:26.5%;text-align:center;}
+  .s1-text{position:absolute;left:8%;right:8%;top:28%;text-align:center;}
   .s1-text::before{content:"";position:absolute;left:-8%;right:-8%;top:-12%;bottom:-14%;z-index:-1;
     background:radial-gradient(closest-side, rgba(255,250,238,.96) 0%, rgba(255,250,238,.88) 60%, rgba(255,250,238,0) 100%);}
   .s1-text .script,.s1-text .italic,.s1-text .caps{text-shadow:0 0 2cqi #fffaf0, 0 0 1cqi #fffaf0;}
@@ -227,14 +227,19 @@
   .petals{position:absolute;inset:0;overflow:hidden;pointer-events:none;}
   .petal{position:absolute;top:-4%;width:2.4cqi;height:1.8cqi;border-radius:70% 0 70% 0;opacity:0;animation:fall linear infinite;}
   @keyframes fall{
-    0% {transform:translate(0,0) rotate(0deg);opacity:0;}
-    8% {opacity:.95;}
+    0%  {transform:translate(0,0) rotate(0deg);opacity:0;}
+    8%  {opacity:.95;}
     100%{transform:translate(10cqi,185cqi) rotate(560deg);opacity:0;}
   }
-  .s1-mantra{font-size:3.6cqi;letter-spacing:.08em;white-space:nowrap;color:#7a4a0a;}
+  /* OM (cursive) + mantra right under Lord Ganesha */
+  .s1-top{position:absolute;left:0;right:0;top:15.2%;text-align:center;}
+  .s1-om{font-family:'Great Vibes',cursive;font-weight:400;font-size:9.5cqi;line-height:1;letter-spacing:0;white-space:nowrap;color:var(--maroon);-webkit-text-stroke:.022em currentColor;paint-order:stroke fill;
+    text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
+  .s1-mantra{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4.8cqi;line-height:1.2;letter-spacing:.02em;white-space:nowrap;color:#7a4a0a;margin-top:.6cqi;
+    text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
   /* same style as "The Rituals" title */
-  .s1-welcome{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:5.4cqi;letter-spacing:.03em;line-height:1.2;color:var(--maroon);margin-top:6cqi;white-space:nowrap;text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
-  .s1-names{font-family:'Great Vibes',cursive;font-size:10.5cqi;line-height:1.2;white-space:nowrap;margin-top:4cqi;
+  .s1-welcome{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:3.8cqi;letter-spacing:.03em;line-height:1.2;color:var(--maroon);margin-top:0;white-space:nowrap;text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
+  .s1-names{font-family:'Great Vibes',cursive;font-size:10.5cqi;line-height:1.2;white-space:nowrap;margin-top:5cqi;
     color:#7a1f2b;text-shadow:0 0 .2cqi #e9c877, 0 .3cqi .6cqi rgba(160,112,31,.45), 0 0 3cqi #fffaf0;}
   .s1-text .orn{margin:4cqi auto 3.6cqi;width:40cqi;}
   .s1-invite{text-align:center;line-height:1;}
@@ -248,7 +253,7 @@
   .s1-invite span::after{content:"";position:absolute;top:0;left:-60%;width:30%;height:100%;
     background:linear-gradient(100deg,transparent,rgba(255,255,255,.7),transparent);transform:skewX(-20deg);animation:sweep 3.5s ease-in-out infinite 1s;}
   .s1-invite i{font-family:'Great Vibes',cursive;font-style:normal;font-weight:400;font-size:1.3em;color:#7a1f2b;padding:0 .08em;}
-  .s1-event{font-size:4.4cqi;letter-spacing:.04em;color:var(--maroon);margin-top:4.4cqi;white-space:nowrap;}
+  .s1-event{font-size:4.4cqi;letter-spacing:.04em;color:var(--maroon);margin-top:6cqi;white-space:nowrap;}
 
   /* =====================================================
      SCREEN 2 – BLESSINGS (moving cows + elders' names)
@@ -357,10 +362,10 @@
   .clock{position:absolute;inset:0;width:100%;height:100%;filter:drop-shadow(0 1.4cqi 3cqi rgba(110,60,20,.28));}
   .clock .hand{transform-origin:50px 50px;}
   .clock .hr,.clock .min{transform:rotate(var(--a));}
-  #screen3.go .clock .hr {animation:spinHr 2.2s cubic-bezier(.2,.8,.3,1) forwards var(--hd,0s);}
+  #screen3.go .clock .hr {animation:spinHr  2.2s cubic-bezier(.2,.8,.3,1) forwards var(--hd,0s);}
   #screen3.go .clock .min{animation:spinMin 2.2s cubic-bezier(.2,.8,.3,1) forwards var(--hd,0s);}
   .clock .sec{animation:spinSlow 60s linear infinite;}
-  @keyframes spinHr {from{transform:rotate(calc(var(--a) - 90deg));} to{transform:rotate(var(--a));}}
+  @keyframes spinHr {from{transform:rotate(calc(var(--a) - 90deg));}  to{transform:rotate(var(--a));}}
   @keyframes spinMin{from{transform:rotate(calc(var(--a) - 1080deg));}to{transform:rotate(var(--a));}}
 
   /* highlighted muhurtham time */
@@ -402,7 +407,7 @@
   .tl-rows{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;}
   .row{display:grid;grid-template-columns:1fr 8cqi 1fr;align-items:center;}
   .row .diya{grid-column:2;justify-self:center;width:7cqi;}
-  .row.left .tcard{grid-column:1;grid-row:1;text-align:right;}
+  .row.left  .tcard{grid-column:1;grid-row:1;text-align:right;}
   .row.right .tcard{grid-column:3;grid-row:1;text-align:left;}
 
   .diya .flame{transform-origin:20px 15px;animation:flicker .9s ease-in-out infinite alternate;}
@@ -454,9 +459,14 @@
   @keyframes photoIn{from{opacity:0;}to{opacity:1;}}
   .s6-photo::after{content:"";position:absolute;top:0;left:-70%;width:40%;height:100%;background:linear-gradient(100deg,transparent,rgba(255,245,215,.6),transparent);transform:skewX(-18deg);animation:sweep 4.5s ease-in-out infinite 3s;}
 
+  /* heart sits exactly in the centre, right under the middle of "Balamoni" */
+  .s6-host .pair{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;}
+  .s6-host .pair>span:first-child{text-align:right;}
+  .s6-host .pair>span:last-child{text-align:left;}
+  .s6-host .heart{font-family:Arial,sans-serif !important;font-size:.7em;color:#c0262d;margin:0 .45em;}
   .s6-names{position:absolute;left:9%;right:9%;top:71.5%;text-align:center;}
   .s6-love{font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:600;font-size:5.4cqi;line-height:1.3;color:var(--text);}
-  .s6-host{font-family:'Cinzel Decorative',serif;font-weight:700;font-size:5.4cqi;letter-spacing:.06em;line-height:1.35;color:var(--maroon);margin-top:1.2cqi;text-wrap:balance;
+  .s6-host{font-family:'Cinzel Decorative',serif;font-weight:700;font-size:5.4cqi;letter-spacing:.06em;line-height:1.35;color:var(--maroon);margin-top:1.2cqi;text-wrap:balance;padding-left:.06em;
     text-shadow:0 0 1.5cqi #fffaf0,0 0 .8cqi #fffaf0;}
 
   /* ---------- SCREEN 6: our new home + directions + blessing card ---------- */
@@ -593,8 +603,9 @@
   body.te .stage *, body.te .loc-card *{font-family:'Noto Serif Telugu',serif !important;letter-spacing:0 !important;font-style:normal !important;-webkit-text-stroke:0 !important;}
   body.te .brand *{font-family:'Cinzel',serif !important;}
   body.te .brand b{letter-spacing:.35em !important;}
-  body.te .s1-mantra{font-size:4.6cqi;font-weight:700;}
-  body.te .s1-welcome{font-size:5.4cqi;font-weight:700;}
+  body.te .s1-mantra{font-size:4.4cqi;font-weight:700;}
+  body.te .s1-welcome{font-size:4cqi;font-weight:700;}
+  body.te .s1-om{font-size:5.8cqi;font-weight:700;}
   body.te .s1-names{font-size:8.4cqi;font-weight:700;line-height:1.4;}
   body.te .s1-invite span{font-size:4cqi;font-weight:700;}
   body.te .s1-event{font-size:5.4cqi;font-weight:700;}
@@ -657,8 +668,12 @@
         <img class="bananaR" src="screen1_new_files/inv4n_bananaR.png" alt="">
         <div class="petals" id="petals1"></div>
       </div>
+      <!-- OM + mantra sit right under Lord Ganesha -->
+      <div class="s1-top">
+        <p class="s1-om ln fade" data-k="om"></p>
+        <p class="s1-mantra ln letters" data-k="mantra"></p>
+      </div>
       <div class="s1-text">
-        <p class="caps s1-mantra ln letters" data-k="mantra"></p>
         <p class="s1-welcome ln letters" data-k="welcome"></p>
         <p class="s1-names ln write" data-k="names"></p>
         <div class="orn ln fade"></div>
@@ -859,10 +874,9 @@
     <canvas id="sparkles"></canvas>
   </div>
 
-  <div class="music-btn off" id="musicBtn">&#9835;</div>
-
-  <!-- language switch: English / Telugu -->
+  <!-- language switch: English / Telugu (on top), music button under it -->
   <div class="lang-btn" id="langBtn"><span class="on">EN</span><span class="tel">తె</span></div>
+  <div class="music-btn off" id="musicBtn">&#9835;</div>
 
   <!-- location button on every screen -->
   <div class="loc-btn" id="locBtn">&#128205;</div>
@@ -886,57 +900,57 @@
      ORDER DETAILS – change only this part for every new order
      ===================================================== */
   const ORDER = {
-    title: "Gruhapravesam",
-    welcome: "Ganesh & Bhargavi", // names on the first screen
-    eventName: "House Warming Ceremony", // line under the names on the first screen
-    hostLine: "Balamoni Bhargavi Ganesh Goud", // "With love" names on screen 5
-    elders: [ { surname: "Balamoni", names: "Krishnaiah & Jangamma" },
-                 { surname: "Palle", names: "Yadaiah & Shoba" } ],
-    date: "2026-12-03", // YYYY-MM-DD
+    title:     "Gruhapravesam",
+    welcome:   "Ganesh & Bhargavi",          // names on the first screen
+    eventName: "House Warming Ceremony",     // line under the names on the first screen
+    hostLine:  'Balamoni<span class="pair"><span>Bhargavi</span><span class="heart">&#9829;</span><span>Ganesh</span></span>',   // "With love" names on screen 5
+    elders:    [ { surname: "Balamoni", names: "Krishnaiah & Jangamma" },
+                 { surname: "Palle",    names: "Yadaiah & Shoba" } ],
+    date:      "2026-12-03",          // YYYY-MM-DD
     muhurtham: "6:30 AM",
-    rituals: [ // cards go white, maroon, white, maroon... main: true = shows MUHURTHAM
-      { icon: "🏺", time: "6:30 AM", name: "Gruhapravesam", sub: "First step in with the kalasam", main: true,
+    rituals: [                        // cards go white, maroon, white, maroon...   main: true = shows MUHURTHAM
+      { icon: "🏺", time: "6:30 AM",  name: "Gruhapravesam",         sub: "First step in with the kalasam", main: true,
         te: ["ఉదయం 6:30", "గృహప్రవేశం", "కలశంతో తొలి అడుగు"] },
-      { icon: "🪔", time: "8:00 AM", name: "Vastu Pooja", sub: "Blessings for the new home",
+      { icon: "🪔", time: "8:00 AM",  name: "Vastu Pooja",           sub: "Blessings for the new home",
         te: ["ఉదయం 8:00", "వాస్తు పూజ", "కొత్త ఇంటికి ఆశీస్సులు"] },
-      { icon: "🔥", time: "9:00 AM", name: "Homam", sub: "Sacred fire for peace",
+      { icon: "🔥", time: "9:00 AM",  name: "Homam",                 sub: "Sacred fire for peace",
         te: ["ఉదయం 9:00", "హోమం", "శాంతి కోసం పవిత్ర అగ్ని"] },
-      { icon: "🌼", time: "10:30 AM", name: "Kalyanam", sub: "Divine wedding ritual",
+      { icon: "🌼", time: "10:30 AM", name: "Kalyanam",              sub: "Divine wedding ritual",
         te: ["ఉదయం 10:30", "కళ్యాణం", "దివ్య కళ్యాణ వేడుక"] },
       { icon: "🪷", time: "11:30 AM", name: "Satyanarayana Vratham", sub: "Pooja & prasadam",
         te: ["ఉదయం 11:30", "సత్యనారాయణ వ్రతం", "పూజ & ప్రసాదం"] },
-      { icon: "🍛", time: "1:00 PM", name: "Lunch", sub: "Bhojanam with family & friends",
+      { icon: "🍛", time: "1:00 PM",  name: "Lunch",                 sub: "Bhojanam with family & friends",
         te: ["మధ్యాహ్నం 1:00", "భోజనం", "బంధుమిత్రులతో విందు"] }
     ],
-    address: "<b>Balamoni Bhargavi Nilayam</b><br>13-131/1, Sai Nagar Colony<br>Edhamma Temple Road, Balapur<br>Hyderabad, Telangana",
-    mapLink: "https://www.google.com/maps/dir/?api=1&destination=17.312446,78.516227&travelmode=driving", // opens DIRECTIONS straight to the exact house pin
-    whatsapp: "919640552020", // blessings come to this WhatsApp number (91 + number)
-    blessMsg: "Heartfelt congratulations on your Gruhapravesam! Wishing your family health, happiness and prosperity in your new home. 🏡✨", // used when guest writes nothing
-    phones: ["9640552020", "9705301222"],
-    music: "invitation4.mpeg", // song file
+    address:   "<b>Bhargavi Ganesh Nilayam</b><br>13-131/1, Sai Nagar Colony<br>Edhamma Temple Road, Balapur<br>Hyderabad, Telangana",
+    mapLink:   "https://www.google.com/maps/dir/?api=1&destination=17.312446,78.516227&travelmode=driving",   // opens DIRECTIONS straight to the exact house pin
+    whatsapp:  "919640552020",        // blessings come to this WhatsApp number (91 + number)
+    blessMsg:  "Heartfelt congratulations on your Gruhapravesam! Wishing your family health, happiness and prosperity in your new home. 🏡✨",  // used when guest writes nothing
+    phones:    ["9640552020", "9705301222"],
+    music:     "invitation4.mpeg",    // song file
 
     /* ---------- TELUGU (shown when guest taps "తె" at the top) ---------- */
     te: {
-      title: "గృహప్రవేశం",
-      welcome: "గణేష్ & భార్గవి",
+      title:     "గృహప్రవేశం",
+      welcome:   "గణేష్ & భార్గవి",
       eventName: "గృహప్రవేశ మహోత్సవం",
-      hostLine: "బాలమోని భార్గవి గణేష్ గౌడ్",
-      elders: [ ["బాలమోని", "కృష్ణయ్య & జంగమ్మ"],
-                   ["పల్లె", "యాదయ్య & శోభ"] ],
+      hostLine:  'బాలమోని<span class="pair"><span>భార్గవి</span><span class="heart">&#9829;</span><span>గణేష్</span></span>',
+      elders:    [ ["బాలమోని", "కృష్ణయ్య & జంగమ్మ"],
+                   ["పల్లె",    "యాదయ్య & శోభ"] ],
       muhurtham: "ఉదయం 6:30",
-      address: "<b>బాలమోని భార్గవి నిలయం</b><br>13-131/1, సాయి నగర్ కాలనీ<br>ఏదమ్మ గుడి రోడ్, బాలాపూర్<br>హైదరాబాద్, తెలంగాణ"
+      address:   "<b>భార్గవి గణేష్ నిలయం</b><br>13-131/1, సాయి నగర్ కాలనీ<br>ఏదమ్మ గుడి రోడ్, బాలాపూర్<br>హైదరాబాద్, తెలంగాణ"
     }
   };
 
   /* ---------- SPEED ---------- */
   const PACE = {
-    letter: 0.035, // small capital lines: seconds per letter
-    pen: 0.075, // cursive lines: seconds per letter (pen writing speed)
-    fly: 0.8, // ritual cards
-    pop: 0.9, // photos / watch
-    diya: 0.35,
-    fade: 0.45,
-    hold: 3.5 // pause after each screen finishes
+    letter:   0.035,   // small capital lines: seconds per letter
+    pen:      0.075,   // cursive lines: seconds per letter (pen writing speed)
+    fly:      0.8,     // ritual cards
+    pop:      0.9,     // photos / watch
+    diya:     0.35,
+    fade:     0.45,
+    hold:     3.5      // pause after each screen finishes
   };
 
   const $ = id => document.getElementById(id);
@@ -945,7 +959,7 @@
   const d = new Date(ORDER.date + "T00:00:00");
   const day = d.getDate();
   const sfx = (day % 10 === 1 && day !== 11) ? "st" : (day % 10 === 2 && day !== 12) ? "nd" : (day % 10 === 3 && day !== 13) ? "rd" : "th";
-  const weekName = d.toLocaleDateString("en-IN", { weekday: "long" });
+  const weekName  = d.toLocaleDateString("en-IN", { weekday: "long" });
   const monthName = d.toLocaleDateString("en-IN", { month: "long" });
 
   /* ---------- Screen 3: muhurtham watch ---------- */
@@ -966,7 +980,7 @@
       s += '<line x1="50" y1="' + (big ? 9 : 10) + '" x2="50" y2="' + (big ? 15 : 12.5) + '" stroke="' + (big ? "#7a1f2b" : "#c9a45a") + '" stroke-width="' + (big ? 1.8 : .7) + '" transform="rotate(' + i * 6 + ' 50 50)"/>';
     }
     const hrA = ((mt.h % 12) + mt.mi / 60) * 30, minA = mt.mi * 6;
-    s += '<line class="hand hr" x1="50" y1="50" x2="50" y2="28" stroke="#7a1f2b" stroke-width="3.6" stroke-linecap="round" style="--a:' + hrA + 'deg"/>' +
+    s += '<line class="hand hr"  x1="50" y1="50" x2="50" y2="28" stroke="#7a1f2b" stroke-width="3.6" stroke-linecap="round" style="--a:' + hrA + 'deg"/>' +
          '<line class="hand min" x1="50" y1="50" x2="50" y2="17" stroke="#a0701f" stroke-width="2.2" stroke-linecap="round" style="--a:' + minA + 'deg"/>' +
          '<line class="hand sec" x1="50" y1="56" x2="50" y2="14" stroke="#d4a64a" stroke-width=".8"/>' +
          '<circle cx="50" cy="50" r="3" fill="#7a1f2b"/><circle cx="50" cy="50" r="1.2" fill="#f3d58a"/>';
@@ -1141,10 +1155,10 @@
      LANGUAGE – English / Telugu (button at the top)
      ===================================================== */
   let LANG = "en";
-  const teWeek = d.toLocaleDateString("te-IN", { weekday: "long" });
+  const teWeek  = d.toLocaleDateString("te-IN", { weekday: "long" });
   const teMonth = d.toLocaleDateString("te-IN", { month: "long" });
   const EN = {
-    mantra: "|| SRI GANESHAYA NAMAHA ||", welcome: "Welcome to the World of", names: ORDER.welcome,
+    om: "OM", mantra: "|| Shree Ganeshaya Namaha ||", welcome: "Welcome to the World of", names: ORDER.welcome,
     invite: "cordially invite you <i>&amp;</i> your family to our", event: ORDER.eventName.toUpperCase(),
     s2head: "With the Blessings of", s2small: "OUR BELOVED ELDERS",
     sur1: ORDER.elders[0].surname.toUpperCase(), cpl1: ORDER.elders[0].names,
@@ -1164,7 +1178,7 @@
   };
   const T2 = ORDER.te;
   const TE = {
-    mantra: "॥ శ్రీ గణేశాయ నమః ॥", welcome: "సాదర స్వాగతం", names: T2.welcome,
+    om: "ఓం", mantra: "॥ శ్రీ గణేశాయ నమః ॥", welcome: "సాదర స్వాగతం", names: T2.welcome,
     invite: "మీకు <i>&amp;</i> మీ కుటుంబ సభ్యులకు ఆహ్వానం", event: T2.eventName,
     s2head: "శుభాశీస్సులతో", s2small: "మా పూజ్య పెద్దలు",
     sur1: T2.elders[0][0], cpl1: T2.elders[0][1], sur2: T2.elders[1][0], cpl2: T2.elders[1][1],
@@ -1201,7 +1215,8 @@
     const sp = $("langBtn").querySelectorAll("span");
     sp[0].classList.toggle("on", l === "en"); sp[1].classList.toggle("on", l === "te");
     fill();
-    goToScreen(cur); // replay the current screen in the new language
+    goToScreen(cur);                         // replay the current screen in the new language
+    if(l === "te" && document.fonts) document.fonts.load("700 20px 'Noto Serif Telugu'").then(() => { if(cur === N && !scTouched && !scDone) initScratch(); });
   }
   $("langBtn").addEventListener("click", e => { e.stopPropagation(); setLang(LANG === "en" ? "te" : "en"); });
   fill();
@@ -1209,10 +1224,10 @@
   /* =====================================================
      SCRATCH CARD – guest scratches the gold to see the new home
      ===================================================== */
-  const sc = $("scratch"), sctx = sc.getContext("2d");
-  let scDone = false, scDown = false, scMoves = 0;
+  const sc = $("scratch"), sctx = sc.getContext("2d", { willReadFrequently: true });
+  let scDone = false, scDown = false, scMoves = 0, scTouched = false;
   function initScratch(){
-    scDone = false; $("surprise").classList.remove("revealed");
+    scDone = false; scTouched = false; scMoves = 0; $("surprise").classList.remove("revealed");
     const w = sc.offsetWidth, h = sc.offsetHeight, dpr = Math.min(window.devicePixelRatio || 1, 2);
     if(!w || !h) return;
     sc.width = w * dpr; sc.height = h * dpr;
@@ -1221,7 +1236,7 @@
     const g = sctx.createLinearGradient(0, 0, w, h);
     g.addColorStop(0, "#f7e3a2"); g.addColorStop(.3, "#c99a3a"); g.addColorStop(.5, "#fff1c0"); g.addColorStop(.7, "#b07b22"); g.addColorStop(1, "#f0d58a");
     sctx.fillStyle = g; sctx.fillRect(0, 0, w, h);
-    for(let i = 0; i < 70; i++){ // little sparkles on the gold
+    for(let i = 0; i < 70; i++){            // little sparkles on the gold
       sctx.fillStyle = "rgba(255,255,255," + (Math.random() * .6) + ")";
       sctx.beginPath(); sctx.arc(Math.random() * w, Math.random() * h, Math.random() * 1.6 + .4, 0, Math.PI * 2); sctx.fill();
     }
@@ -1232,13 +1247,15 @@
     const t = TXT(), te = LANG === "te";
     if(te) sctx.font = "700 " + Math.round(w * .09) + "px 'Noto Serif Telugu', serif";
     sctx.fillText(t.sc1, w / 2, h * .36);
-    let fs = w * .13; // shrink the line until it fits inside the card
+    let fs = w * .13;                      // shrink the line until it fits inside the card
     do { sctx.font = (te ? "700 " : "") + Math.round(te ? fs * .75 : fs) + "px " + (te ? "'Noto Serif Telugu', serif" : "'Great Vibes', cursive"); fs -= 1; } while(sctx.measureText(t.sc2).width > w * .84 && fs > 8);
     sctx.fillText(t.sc2, w / 2, h * .58);
     sctx.font = Math.round(w * .13) + "px serif";
     sctx.fillText("👆", w / 2, h * .84);
   }
   function scratchAt(e){
+    if(scDone) return;
+    scTouched = true;
     const r = sc.getBoundingClientRect();
     const x = (e.clientX - r.left) * (sc.offsetWidth / r.width), y = (e.clientY - r.top) * (sc.offsetHeight / r.height);
     sctx.globalCompositeOperation = "destination-out";
@@ -1250,11 +1267,15 @@
     const d = sctx.getImageData(0, 0, sc.width, sc.height).data;
     let clear = 0, total = 0;
     for(let i = 3; i < d.length; i += 64){ total++; if(d[i] === 0) clear++; }
-    if(clear / total > .45){ scDone = true; $("surprise").classList.add("revealed"); }
+    if(clear / total > .35 || scMoves > 140){ reveal(); }   // opens after about a third is scratched
   }
+  function reveal(){ if(scDone) return; scDone = true; $("surprise").classList.add("revealed"); }
+  // if the Telugu font arrives after the card was drawn, redraw it (only if not scratched yet)
+  if(document.fonts) document.fonts.ready.then(() => { if(cur === N && !scTouched && !scDone) initScratch(); });
   sc.addEventListener("pointerdown", e => { scDown = true; sc.setPointerCapture(e.pointerId); scratchAt(e); });
   sc.addEventListener("pointermove", e => { if(scDown) scratchAt(e); });
-  sc.addEventListener("pointerup", () => { scDown = false; checkScratch(); });
+  sc.addEventListener("pointerup",   () => { scDown = false; checkScratch(); });
+  sc.addEventListener("dblclick", reveal);   // double-tap also opens the home
   sc.addEventListener("pointercancel", () => { scDown = false; });
 
   /* =====================================================
