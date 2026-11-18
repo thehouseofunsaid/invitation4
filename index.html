@@ -27,7 +27,7 @@
   body{-webkit-text-size-adjust:100%;user-select:none;-webkit-user-select:none;}
   body{font-family:'Cormorant Garamond',serif;color:var(--text);-webkit-tap-highlight-color:transparent;}
 
-  /* Phone-sized frame (on laptop it stays phone width) – fixed height so it never jumps */
+  /* Phone-sized frame (on laptop it stays phone width) */
   .app{
     position:relative;
     width:min(100vw,480px);
@@ -160,16 +160,6 @@
   /* backgrounds stay still (no zoom) so every screen looks steady */
 
   /* =====================================================
-     LANGUAGE SWITCH (EN / తె) – right edge, on top
-     ===================================================== */
-  .lang-btn{position:absolute;z-index:70;top:calc(env(safe-area-inset-top, 0px) + 22px);right:12px;width:34px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px;
-    border-radius:18px;border:1.2px solid var(--gold);background:rgba(255,250,240,.9);box-shadow:0 0 0 3px rgba(255,248,225,.5);cursor:pointer;}
-  .lang-btn span{width:28px;height:26px;line-height:26px;padding:0;border-radius:14px;text-align:center;
-    font-family:'Cinzel',serif;font-weight:700;font-size:12px;color:var(--maroon);transition:background .3s ease,color .3s ease;}
-  .lang-btn span.tel{font-family:'Noto Serif Telugu',serif;font-size:14px;line-height:25px;}
-  .lang-btn span.on{background:linear-gradient(135deg,#962f3b,#7a1f2b 55%,#5a1420);color:#fff3c4;}
-
-  /* =====================================================
      MUSIC BUTTON (right edge, under the language switch)
      ===================================================== */
   .music-btn{
@@ -231,11 +221,9 @@
     8%  {opacity:.95;}
     100%{transform:translate(10cqi,185cqi) rotate(560deg);opacity:0;}
   }
-  /* OM (cursive) + mantra right under Lord Ganesha */
+  /* mantra stays in the same place as before (OM removed) */
   .s1-top{position:absolute;left:0;right:0;top:15.2%;text-align:center;}
-  .s1-om{font-family:'Great Vibes',cursive;font-weight:400;font-size:9.5cqi;line-height:1;letter-spacing:0;white-space:nowrap;color:var(--maroon);-webkit-text-stroke:.022em currentColor;paint-order:stroke fill;
-    text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
-  .s1-mantra{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4.8cqi;line-height:1.2;letter-spacing:.02em;white-space:nowrap;color:#7a4a0a;margin-top:.6cqi;
+  .s1-mantra{font-family:'Cormorant Garamond',serif;font-weight:700;font-size:4.8cqi;line-height:1.2;letter-spacing:.02em;white-space:nowrap;color:#7a4a0a;margin-top:10.1cqi;
     text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
   /* same style as "The Rituals" title */
   .s1-welcome{font-family:'Cinzel Decorative',serif;font-weight:900;font-size:3.8cqi;letter-spacing:.03em;line-height:1.2;color:var(--maroon);margin-top:0;white-space:nowrap;text-shadow:0 0 2cqi #fffaf0,0 0 1cqi #fffaf0;}
@@ -243,7 +231,7 @@
     color:#7a1f2b;text-shadow:0 0 .2cqi #e9c877, 0 .3cqi .6cqi rgba(160,112,31,.45), 0 0 3cqi #fffaf0;}
   .s1-text .orn{margin:4cqi auto 3.6cqi;width:40cqi;}
   .s1-invite{text-align:center;line-height:1;}
-  /* invite line: one line, bigger, on a gold ribbon with maroon text and a shine */
+  /* invite line: one line, bold, on a gold ribbon with a shine */
   .s1-invite span{position:relative;overflow:hidden;display:inline-block;white-space:nowrap;
     font-family:'Cormorant Garamond',serif;font-style:italic;font-weight:700;font-size:4.3cqi;letter-spacing:0;line-height:1.2;
     color:#6a1622;text-shadow:0 .1cqi 0 rgba(255,250,230,.8);
@@ -339,7 +327,6 @@
     background:linear-gradient(90deg,transparent,var(--gold));}
   .s3-please::after{background:linear-gradient(90deg,var(--gold),transparent);}
   .s3-for{font-size:6.2cqi;line-height:1.05;margin-top:1.8cqi;}
-  /* extra room all around so the big "G" of Gruhapravesam is never cut */
   .s3-title{font-family:'Great Vibes',cursive;font-size:10.8cqi;line-height:1.1;margin-top:1.4cqi;padding:.28em .5em .38em !important;margin-bottom:-.3em;
     background:linear-gradient(100deg,#7a1f2b 0%,#a8323f 22%,#d9a441 38%,#fff0bd 48%,#d9a441 58%,#a8323f 76%,#7a1f2b 100%) !important;
     background-size:220% 100% !important;-webkit-background-clip:text !important;background-clip:text !important;
@@ -452,7 +439,6 @@
   }
   /* whole photo always shows – tall or wide – never cut, never stretched */
   .s6-photo img{display:block;width:auto;height:auto;max-width:80cqi;max-height:104cqi;border-radius:1cqi;border:.5cqi solid #fff7e0;}
-  /* screen 5: gold frame, a little bigger, with a gap under the heading */
   .famwrap .s6-photo img{max-width:72cqi;max-height:94cqi;}
   /* photo appears with a fade only – no blur/scale left on it, so it stays sharp */
   .s6-photo.ln.on.pop{animation:photoIn 1s ease forwards;}
@@ -601,18 +587,25 @@
   .loc-close{position:absolute;top:10px;right:12px;width:32px;height:32px;border-radius:50%;border:1px solid rgba(160,112,31,.5);
     background:#fffaf2;color:var(--maroon);font-size:18px;line-height:30px;cursor:pointer;}
 
+  /* =====================================================
+     LANGUAGE SWITCH (EN / తె) – right edge, on top
+     ===================================================== */
+  .lang-btn{position:absolute;z-index:70;top:calc(env(safe-area-inset-top, 0px) + 22px);right:12px;width:34px;display:flex;flex-direction:column;align-items:center;gap:2px;padding:2px;
+    border-radius:18px;border:1.2px solid var(--gold);background:rgba(255,250,240,.9);box-shadow:0 0 0 3px rgba(255,248,225,.5);cursor:pointer;}
+  .lang-btn span{width:28px;height:26px;line-height:26px;padding:0;border-radius:14px;text-align:center;
+    font-family:'Cinzel',serif;font-weight:700;font-size:12px;color:var(--maroon);transition:background .3s ease,color .3s ease;}
+  .lang-btn span.tel{font-family:'Noto Serif Telugu',serif;font-size:14px;line-height:27px;}
+  .lang-btn span.on{background:linear-gradient(135deg,#962f3b,#7a1f2b 55%,#5a1420);color:#fff3c4;}
+
   /* letter lines in Telugu appear as one smooth fade (Telugu letters must stay joined) */
   .ln.on.letters.whole{animation:fadeUp .9s ease both;}
 
-  /* =====================================================
-     TELUGU MODE – Telugu font + sizes that fit
-     ===================================================== */
+  /* ---------- TELUGU MODE: Telugu font + sizes that fit ---------- */
   body.te .stage *, body.te .loc-card *{font-family:'Noto Serif Telugu',serif !important;letter-spacing:0 !important;font-style:normal !important;-webkit-text-stroke:0 !important;}
   body.te .brand *{font-family:'Cinzel',serif !important;}
   body.te .brand b{letter-spacing:.35em !important;}
-  body.te .s1-mantra{font-size:4.4cqi;font-weight:700;}
+  body.te .s1-mantra{font-size:4.4cqi;font-weight:700;margin-top:6.4cqi;}
   body.te .s1-welcome{font-size:4cqi;font-weight:700;}
-  body.te .s1-om{font-size:5.8cqi;font-weight:700;}
   body.te .s1-names{font-size:8.4cqi;font-weight:700;line-height:1.4;}
   body.te .s1-invite span{font-size:4cqi;font-weight:700;}
   body.te .s1-event{font-size:5.4cqi;font-weight:700;}
@@ -677,9 +670,8 @@
         <img class="bananaR" src="screen1_new_files/inv4n_bananaR.png" alt="">
         <div class="petals" id="petals1"></div>
       </div>
-      <!-- OM + mantra sit right under Lord Ganesha -->
+      <!-- mantra (OM removed) -->
       <div class="s1-top">
-        <p class="s1-om ln fade" data-k="om"></p>
         <p class="s1-mantra ln letters" data-k="mantra"></p>
       </div>
       <div class="s1-text">
@@ -884,9 +876,10 @@
     <canvas id="sparkles"></canvas>
   </div>
 
-  <!-- language switch: English / Telugu (on top), music button under it -->
-  <div class="lang-btn" id="langBtn"><span class="on">EN</span><span class="tel">తె</span></div>
   <div class="music-btn off" id="musicBtn">&#9835;</div>
+
+  <!-- language switch: English / Telugu -->
+  <div class="lang-btn" id="langBtn"><span class="on">EN</span><span class="tel">తె</span></div>
 
   <!-- location button on every screen -->
   <div class="loc-btn" id="locBtn">&#128205;</div>
@@ -1027,7 +1020,7 @@
   $("s6Calls").innerHTML = "&#9742; " + ORDER.phones.map(p => '<a href="tel:' + p + '">' + p + '</a>').join(" &nbsp;·&nbsp; ");
 
   /* =====================================================
-     SPLIT CAPITAL LINES INTO SINGLE LETTERS
+     SPLIT LINES INTO SINGLE LETTERS
      ===================================================== */
   function splitLetters(el){
     [...el.childNodes].forEach(node => {
@@ -1168,7 +1161,7 @@
   const teWeek  = d.toLocaleDateString("te-IN", { weekday: "long" });
   const teMonth = d.toLocaleDateString("te-IN", { month: "long" });
   const EN = {
-    om: "OM", mantra: "|| Shree Ganeshaya Namaha ||", welcome: "Welcome to the World of", names: ORDER.welcome,
+    mantra: "|| Shree Ganeshaya Namaha ||", welcome: "Welcome to the World of", names: ORDER.welcome,
     invite: "cordially invite you <i>&amp;</i> your family to our", event: ORDER.eventName.toUpperCase(),
     s2head: "With the Blessings of", s2small: "OUR BELOVED ELDERS",
     sur1: ORDER.elders[0].surname.toUpperCase(), cpl1: ORDER.elders[0].names,
@@ -1188,7 +1181,7 @@
   };
   const T2 = ORDER.te;
   const TE = {
-    om: "ఓం", mantra: "॥ శ్రీ గణేశాయ నమః ॥", welcome: "సాదర స్వాగతం", names: T2.welcome,
+    mantra: "॥ శ్రీ గణేశాయ నమః ॥", welcome: "సాదర స్వాగతం", names: T2.welcome,
     invite: "మీకు <i>&amp;</i> మీ కుటుంబ సభ్యులకు ఆహ్వానం", event: T2.eventName,
     s2head: "శుభాశీస్సులతో", s2small: "మా పూజ్య పెద్దలు",
     sur1: T2.elders[0][0], cpl1: T2.elders[0][1], sur2: T2.elders[1][0], cpl2: T2.elders[1][1],
